@@ -37,8 +37,10 @@ WORKDIR /tmp/cilium-repo/cilium-1.11.2
 
 COPY 001-netfilter-compatibility-mode.patch /
 COPY 002-skip-masquerad-only-for-internalip.patch /
+COPY 003-customer-ip-annotation.patch /
 RUN patch -p1 < /001-netfilter-compatibility-mode.patch && \
-    patch -p1 < /002-skip-masquerad-only-for-internalip.patch
+    patch -p1 < /002-skip-masquerad-only-for-internalip.patch && \
+    patch -p1 < /003-customer-ip-annotation.patch
 
 RUN make PKG_BUILD=1 \
     SKIP_DOCS=true DESTDIR=/tmp/install build-container install-container-binary
