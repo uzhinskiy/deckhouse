@@ -99,3 +99,16 @@ index c85f0373cb..f1ec779215 100644
  // AllocationResult is the result of an allocation
  type AllocationResult struct {
  	// IP is the allocated IP
+diff --git a/vendor/github.com/cilium/ipam/service/ipallocator/allocator.go b/vendor/github.com/cilium/ipam/service/ipallocator/allocator.go
+index f08e883d5a..77a10e11bd 100644
+--- a/vendor/github.com/cilium/ipam/service/ipallocator/allocator.go
++++ b/vendor/github.com/cilium/ipam/service/ipallocator/allocator.go
+@@ -131,7 +131,7 @@ func (r *Range) CIDR() net.IPNet {
+ func (r *Range) Allocate(ip net.IP) error {
+ 	ok, offset := r.contains(ip)
+ 	if !ok {
+-		return &ErrNotInRange{r.net.String()}
++		//return &ErrNotInRange{r.net.String()}
+ 	}
+ 
+ 	allocated, err := r.alloc.Allocate(offset)
