@@ -1,4 +1,4 @@
-{{- $manual_ngs := [] }}
+{{- $manual_ngs := list }}
 {{- range $ng := .Values.nodeManager.internal.nodeGroups }}
   {{- if and (ne $ng.nodeType "CloudEphemeral") (ne $ng.nodeType "Cloud") }}
     $manual_ngs = append $manual_ngs (printf "manual-bootstrap-for-%s" $ng.name)
