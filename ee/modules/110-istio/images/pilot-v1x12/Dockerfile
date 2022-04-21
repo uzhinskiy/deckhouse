@@ -1,7 +1,7 @@
-# Based on https://github.com/istio/istio/blob/1.10.1/pilot/docker/Dockerfile.pilot
+# Based on https://github.com/istio/istio/blob/1.12.6/pilot/docker/Dockerfile.pilot
 ARG BASE_DEBIAN
 
-FROM docker.io/istio/pilot:1.10.1@sha256:fd158a373928927774d1129adc894507f7e452d401de785f4ab2a675a0d43932 as artifact
+FROM docker.io/istio/pilot:1.12.6@sha256:a930b1a37df46c70a4d715fe11999a7310303dd1d49092616c6571b5f13a7ce6 as artifact
 
 FROM $BASE_DEBIAN
 RUN apt-get update && \
@@ -11,6 +11,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=artifact /usr/local/bin/pilot-discovery /usr/local/bin/
+COPY --from=artifact /var/lib/istio/envoy/envoy_bootstrap_tmpl.json /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
+COPY --from=artifact /var/lib/istio/envoy/gcp_envoy_bootstrap_tmpl.json /var/lib/istio/envoy/gcp_envoy_bootstrap_tmpl.json
 
 USER 1337:1337
 

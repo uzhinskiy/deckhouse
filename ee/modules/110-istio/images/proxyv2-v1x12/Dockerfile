@@ -1,12 +1,13 @@
-# Based on https://github.com/istio/istio/blob/1.10.1/pilot/docker/Dockerfile.proxyv2
+# Based on https://github.com/istio/istio/blob/1.12.6/pilot/docker/Dockerfile.proxyv2
 ARG BASE_DEBIAN
-FROM docker.io/istio/proxyv2:1.10.1@sha256:d9b295da022ad826c54d5bb49f1f2b661826efd8c2672b2f61ddc2aedac78cfc as artifact
+FROM docker.io/istio/proxyv2:1.12.6@sha256:4b796185f4eecb8bc408bcb3c0f74f1e2065d06992d6430a32e12e6b9767aad8 as artifact
 
 FROM $BASE_DEBIAN
 WORKDIR /
 
-ARG proxy_version=istio-proxy:6ed2bb2f175eb715580ca1d49673bf3b0eb19952
-ARG istio_version=1.10.1
+# https://hub.docker.com/layers/istio/proxyv2/1.12.6/images/sha256-4b796185f4eecb8bc408bcb3c0f74f1e2065d06992d6430a32e12e6b9767aad8?context=explore
+ARG proxy_version=istio-proxy:8e01cb8916baa28e4f56cd10c2bac54813f8daf9
+ARG istio_version=1.12.6
 ARG SIDECAR=envoy
 
 RUN apt-get update && \
