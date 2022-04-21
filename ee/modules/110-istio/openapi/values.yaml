@@ -88,7 +88,8 @@ properties:
         items:
           type: string
         default:
-        - 1.10.1
+        - "1.10.1"
+        - "1.12"
         x-examples:
         - ["1.10.1"]
       globalRevision:

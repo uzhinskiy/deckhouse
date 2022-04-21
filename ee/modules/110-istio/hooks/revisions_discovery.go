@@ -1,16 +1,17 @@
 /*
-Copyright 2021 Flant JSC
+Copyright 2022 Flant JSC
 Licensed under the Deckhouse Platform Enterprise Edition (EE) license. See https://github.com/deckhouse/deckhouse/blob/main/ee/LICENSE
 */
 
 package hooks
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/flant/shell-operator/pkg/kube_events_manager/types"
 
 	"github.com/flant/addon-operator/pkg/module_manager/go_hook"
 	"github.com/flant/addon-operator/sdk"
@@ -54,16 +55,34 @@ func applyNamespaceFilter(obj *unstructured.Unstructured) (go_hook.FilterResult,
 		return "", err
 	}
 
-	var namespaceInfo = NamespaceInfo{
-		Name:     namespace.GetName(),
-		Revision: "",
+	return NamespaceInfo{
+		Name: namespace.GetName(),
+	}, nil
+}
+
+type GlobalServiceInfo struct {
+	Version string
+}
+
+func applyGlobalServiceFilter(obj *unstructured.Unstructured) (go_hook.FilterResult, error) {
+	var service v1.Service
+	err := sdk.FromUnstructured(obj, &service)
+	if err != nil {
+		return "", err
 	}
 
-	if revision, ok := namespace.Labels["istio.io/rev"]; ok {
-		namespaceInfo.Revision = revision
+	var globalServiceInfo = GlobalServiceInfo{
+		Version: "",
 	}
 
-	return namespaceInfo, nil
+	if version, ok := service.GetAnnotations()["istio.deckhouse.io/global-version"]; ok {
+		globalServiceInfo.Version = version
+	} else if _, ok := service.Spec.Selector["istio.io/rev"]; ok {
+		// migration from v1.10.1: delete this "else" after deploying to all clusters
+		globalServiceInfo.Version = "1.10.1"
+	}
+
+	return globalServiceInfo, nil
 }
 
 var _ = sdk.RegisterFunc(&go_hook.HookConfig{
@@ -97,6 +116,16 @@ var _ = sdk.RegisterFunc(&go_hook.HookConfig{
 				},
 			},
 		},
+		{
+			Name:              "service_global_revision",
+			ApiVersion:        "v1",
+			Kind:              "Service",
+			FilterFunc:        applyGlobalServiceFilter,
+			NamespaceSelector: internal.NsSelector(),
+			NameSelector: &types.NameSelector{
+				MatchNames: []string{"istiod"},
+			},
+		},
 	},
 	Schedule: []go_hook.ScheduleConfig{ // Due to we are afraid of subscribing to all Pods in the cluster,
 		{Name: "cron", Crontab: "0 * * * *"}, // we run the hook every hour to discover unused revisions.
@@ -125,13 +154,7 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 	var operatorRevisionsToInstall = make([]string, 0)
 	var applicationNamespaces = make([]string, 0)
 
-	k8sClient, err := dc.GetK8sClient()
-	if err != nil {
-		return err
-	}
-
 	var supportedRevisions []string
-
 	var supportedVersionsResult = input.Values.Get("istio.internal.supportedVersions").Array()
 	for _, versionResult := range supportedVersionsResult {
 		supportedRevisions = append(supportedRevisions, versionToRevision(versionResult.String()))
@@ -140,18 +163,30 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 	var globalVersion string
 	if input.Values.Exists("istio.globalVersion") {
 		globalVersion = input.Values.Get("istio.globalVersion").String()
+	} else if len(input.Snapshots["service_global_revision"]) == 1 {
+		globalServiceInfo := input.Snapshots["service_global_revision"][0].(GlobalServiceInfo)
+		globalVersion = globalServiceInfo.Version
 	} else {
 		globalVersion = supportedVersionsResult[len(supportedVersionsResult)-1].String()
 	}
 	globalRevision = versionToRevision(globalVersion)
 
-	revisionsToInstall = append(revisionsToInstall, globalRevision)
+	var additionalRevisions []string
+	var additionalVersionsResult = input.Values.Get("istio.additionalVersions").Array()
+	for _, versionResult := range additionalVersionsResult {
+		rev := versionToRevision(versionResult.String())
+		if !internal.Contains(additionalRevisions, rev) {
+			additionalRevisions = append(additionalRevisions, rev)
+		}
+	}
+
+	revisionsToInstall = append(revisionsToInstall, additionalRevisions...)
+	if !internal.Contains(revisionsToInstall, globalRevision) {
+		revisionsToInstall = append(additionalRevisions, globalRevision)
+	}
+
 	for _, ns := range input.Snapshots["namespaces_definite_revision"] {
 		nsInfo := ns.(NamespaceInfo)
-		if !internal.Contains(revisionsToInstall, nsInfo.Revision) {
-			revisionsToInstall = append(revisionsToInstall, nsInfo.Revision)
-		}
-
 		if !internal.Contains(applicationNamespaces, nsInfo.Name) {
 			applicationNamespaces = append(applicationNamespaces, nsInfo.Name)
 		}
@@ -160,22 +195,6 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 		nsInfo := ns.(NamespaceInfo)
 		if !internal.Contains(applicationNamespaces, nsInfo.Name) {
 			applicationNamespaces = append(applicationNamespaces, nsInfo.Name)
-		}
-	}
-
-	podList, err := k8sClient.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{LabelSelector: "istio.io/rev"})
-	if err != nil {
-		return err
-	}
-	for _, pod := range podList.Items {
-		rev := pod.Labels["istio.io/rev"]
-		ns := pod.GetNamespace()
-
-		if !internal.Contains(revisionsToInstall, rev) {
-			revisionsToInstall = append(revisionsToInstall, rev)
-		}
-		if !internal.Contains(applicationNamespaces, ns) {
-			applicationNamespaces = append(applicationNamespaces, ns)
 		}
 	}
 
@@ -206,6 +225,7 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 	input.Values.Set("istio.internal.revisionsToInstall", revisionsToInstall)
 	input.Values.Set("istio.internal.operatorRevisionsToInstall", operatorRevisionsToInstall)
 	input.Values.Set("istio.internal.applicationNamespaces", applicationNamespaces)
+	input.ConfigValues.Set("istio.globalVersion", globalVersion)
 
 	return nil
 }
