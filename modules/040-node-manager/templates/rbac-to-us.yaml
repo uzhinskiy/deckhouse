@@ -11,7 +11,7 @@ metadata:
   name: node-manager
   namespace: d8-monitoring
   {{- include "helm_lib_module_labels" (list . (dict "app" "node-manager")) | nindent 2 }}
-{{- if gt (len $manual_ngs) 0 }
+{{- if gt (len $manual_ngs) 0 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
