@@ -40,7 +40,7 @@ func (c PrometheusApiAvailable) Checker() check.Checker {
 		endpoint: c.Endpoint,
 		access:   c.Access,
 	}
-	checker := newHTTPChecker(insecureClient, verifier)
+	checker := newHTTPChecker(newInsecureClient(3*c.Timeout), verifier)
 	return withTimeout(checker, c.Timeout)
 }
 
@@ -50,7 +50,7 @@ type prometheusAPIVerifier struct {
 }
 
 func (v prometheusAPIVerifier) Request() *http.Request {
-	req, err := newGetRequest(v.endpoint, v.access.ServiceAccountToken())
+	req, err := newGetRequest(v.endpoint, v.access.ServiceAccountToken(), v.access.UserAgent())
 	if err != nil {
 		panic(err)
 	}
@@ -100,9 +100,7 @@ func (c MetricPresentInPrometheus) Checker() check.Checker {
 		access:   c.Access,
 		endpoint: addMetricQuery(c.Endpoint, c.Metric),
 	}
-
-	checker := newHTTPChecker(insecureClient, verifier)
-
+	checker := newHTTPChecker(newInsecureClient(3*c.Timeout), verifier)
 	return withTimeout(checker, c.Timeout)
 }
 
@@ -112,7 +110,7 @@ type metricPresenceVerifier struct {
 }
 
 func (v *metricPresenceVerifier) Request() *http.Request {
-	req, err := newGetRequest(v.endpoint, v.access.ServiceAccountToken())
+	req, err := newGetRequest(v.endpoint, v.access.ServiceAccountToken(), v.access.UserAgent())
 	if err != nil {
 		panic(err)
 	}

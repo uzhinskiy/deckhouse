@@ -7,7 +7,7 @@ title: "Cloud provider — VMware vSphere: Preparing environment"
 ## List of required vSphere resources
 
 * **User** with required set of [permissions](#permissions).
-* **Network** with DHCP server and access to the Internet
+* **Network** with DHCP server and access to the Internet.
 * **Datacenter** with a tag in [`k8s-region`](#creating-tags-and-tag-categories) category.
 * **ComputeCluster** with a tag in [`k8s-zone`](#creating-tags-and-tag-categories).
 * **Datastore** with required [tags](#datastore-tags).
@@ -19,6 +19,8 @@ The vSphere CLI called [govc](https://github.com/vmware/govmomi/tree/master/govc
 
 ### Setting up govc
 
+To configure the utility, set the following environment variables:
+
 ```shell
 export GOVC_URL=example.com
 export GOVC_USERNAME=<USER_NAME>
@@ -28,9 +30,9 @@ export GOVC_INSECURE=1
 
 ### Creating tags and tag categories
 
-VMware vSphere doesn't have "regions" and "zones". It has Datacenters and ComputeClusters.
+VMware vSphere doesn't have *regions* and *zones*. It has Datacenters and ComputeClusters.
 
-To establish relation between these and "regions"/"zones" we'll use tags that fall into two tag categories. One for "region" tags and another for "zones tags".
+To establish relation between these and *regions*/*zones* we'll use tags that fall into two tag categories. One for *region* tags and another for *zones tags*.
 
 For example, here is how you can create two regions with two availability zones in each region:
 
@@ -82,24 +84,26 @@ govc permissions.set  -principal username -role kubernetes /datacenter
 
 ### Networking
 A VLAN with DHCP and Internet access is required for the running cluster:
-* If the VLAN is public (public addresses), then you have to create a second network to deploy cluster nodes (DHCP is not needed in this network);
+* If the VLAN is public (public addresses), then you have to create a second network to deploy cluster nodes (DHCP is not needed in this network).
 * If the VLAN is private (private addresses), then this network can be used for cluster nodes.
 
 ### Inbound traffic
 * You can use an internal load balancer (if present) and direct traffic directly to the front nodes of the cluster.
 * If there is no load balancer, you can use MetalLB in BGP mode to organize fault-tolerant load balancers (recommended). In this case, front nodes of the cluster will have two interfaces. For this, you will need:
-  * A dedicated VLAN for traffic exchange between BGP routers and MetalLB. This VLAN must have DHCP and Internet access;
-  * IP addresses of BGP routers;
-  * ASN — the AS number on the BGP router;
-  * ASN — the AS number in the cluster;
-  * A range to announce addresses from;
+  * A dedicated VLAN for traffic exchange between BGP routers and MetalLB. This VLAN must have DHCP and Internet access.
+  * IP addresses of BGP routers.
+  * ASN — the AS number on the BGP router.
+  * ASN — the AS number in the cluster.
+  * A range to announce addresses from.
 
 ### Using the data store
 Various types of storage can be used in the cluster; for the minimum configuration, you will need:
-* Datastore for provisioning PersistentVolumes to the Kubernetes cluster;
+* Datastore for provisioning PersistentVolumes to the Kubernetes cluster.
 * Datastore for provisioning root disks for the VMs (it can be the same Datastore as for PersistentVolume).
 
 ### Building a VM image
+
+To build a VM image, follow these steps:
 
 1. [Install Packer](https://learn.hashicorp.com/tutorials/packer/get-started-install-cli).
 1. Clone the Deckhouse repository:

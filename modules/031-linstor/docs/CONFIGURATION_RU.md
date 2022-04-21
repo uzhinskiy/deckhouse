@@ -7,7 +7,3 @@ title: "Модуль linstor: настройки"
 data:
   linstorEnabled: "true"
 ```
-
-## Параметры
-
-<!-- SCHEMA -->

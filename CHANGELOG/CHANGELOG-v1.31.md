@@ -56,8 +56,11 @@
 ## Fixes
 
 
+ - **[candi]** Renamed the centos-7 bundle to centos. [#1398](https://github.com/deckhouse/deckhouse/pull/1398)
+ - **[candi]** Added proper labels and taints on cluster bootstrap to master nodes. [#1287](https://github.com/deckhouse/deckhouse/pull/1287)
  - **[candi]** Update Kubernetes components to the latest patch versions. [#770](https://github.com/deckhouse/deckhouse/pull/770)
     Kubernetes control-plane components and kubelet will restart for 1.20, 1.21 and 1.22 minor versions.
+ - **[cloud-provider-aws]** The Standard layout is considered deprecated. [#1292](https://github.com/deckhouse/deckhouse/pull/1292)
  - **[cloud-provider-openstack]** Remove default `podNetworkMode` from the config-values. [#1248](https://github.com/deckhouse/deckhouse/pull/1248)
  - **[cloud-provider-vsphere]** Fix handle of compatibilityFlag in Deckhouse config [#1156](https://github.com/deckhouse/deckhouse/pull/1156)
  - **[common]** The `csi-controller` template requires NAMESPACE environment variable. [#864](https://github.com/deckhouse/deckhouse/pull/864)
@@ -69,6 +72,7 @@
  - **[ingress-nginx]** Make the VHost Detail dashboard show all locations by default [#1251](https://github.com/deckhouse/deckhouse/pull/1251)
  - **[ingress-nginx]** Fix ingress admission webhook [#1207](https://github.com/deckhouse/deckhouse/pull/1207)
  - **[ingress-nginx]** Proper validating webhook configuration for k8s 1.22+. [#637](https://github.com/deckhouse/deckhouse/pull/637)
+ - **[istio]** The `istio.tracing.kiali.jaegerURLForUsers` parameter bugfix. [#1402](https://github.com/deckhouse/deckhouse/pull/1402)
  - **[istio]** AuthURL fix in external_auth.go hook. [#1216](https://github.com/deckhouse/deckhouse/pull/1216)
  - **[istio]** Canary usage doc fix. [#731](https://github.com/deckhouse/deckhouse/pull/731)
  - **[kube-dns]** FAQ clarifications about changing `clusterDomain`, ServiceAccount tokens and Istio. [#686](https://github.com/deckhouse/deckhouse/pull/686)
@@ -80,6 +84,8 @@
     node.kubernetes.io/exclude-from-external-load-balancers label will be deleted from the master node group. It also can not be set manually in the current release.
     Without "node.kubernetes.io/exclude-from-external-load-balancers" label traffic can be directed to control plane nodes.
     In the next release, migration will delete it, and users can add it manually if necessary.
+ - **[openvpn]** Fixed DexAuthenticator applicationDomain. [#1309](https://github.com/deckhouse/deckhouse/pull/1309)
+ - **[prometheus]** Handle path prefix for `CustomAlertmanager`. [#1308](https://github.com/deckhouse/deckhouse/pull/1308)
  - **[prometheus]** Exposing API doc fixes. [#870](https://github.com/deckhouse/deckhouse/pull/870)
  - **[prometheus-metrics-adapter]** Fix custom metrics workability [#1259](https://github.com/deckhouse/deckhouse/pull/1259)
  - **[upmeter]** Make dashboards immutable (that weren't already). [#840](https://github.com/deckhouse/deckhouse/pull/840)

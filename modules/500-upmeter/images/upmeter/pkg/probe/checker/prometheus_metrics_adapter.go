@@ -38,7 +38,7 @@ func (c MetricsAdapterApiAvailable) Checker() check.Checker {
 		endpoint:     c.Endpoint,
 		kubeAccessor: c.Access,
 	}
-	checker := newHTTPChecker(insecureClient, verifier)
+	checker := newHTTPChecker(newInsecureClient(3*c.Timeout), verifier)
 	return withTimeout(checker, c.Timeout)
 }
 
@@ -48,7 +48,7 @@ type metricsAdapterAPIVerifier struct {
 }
 
 func (v metricsAdapterAPIVerifier) Request() *http.Request {
-	req, err := newGetRequest(v.endpoint, v.kubeAccessor.ServiceAccountToken())
+	req, err := newGetRequest(v.endpoint, v.kubeAccessor.ServiceAccountToken(), v.kubeAccessor.UserAgent())
 	if err != nil {
 		panic(err)
 	}

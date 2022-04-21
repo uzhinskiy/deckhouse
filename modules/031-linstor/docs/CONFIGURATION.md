@@ -7,7 +7,3 @@ This module is **disabled** by default. To enable it, add the following lines to
 data:
   linstorEnabled: "true"
 ```
-
-## Parameters
-
-<!-- SCHEMA -->
