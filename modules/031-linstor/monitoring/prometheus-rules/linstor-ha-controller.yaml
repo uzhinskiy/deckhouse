@@ -11,7 +11,7 @@
         plk_markup_format: "markdown"
         plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
-        plk_create_group_if_not_exists__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor"
+        plk_create_group_if_not_exists__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-ha-controller"
         plk_grouped_by__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=~tier,prometheus=deckhouse"
         plk_grouped_by__main: "D8LinstorHaControllerHealth,tier=~tier,prometheus=deckhouse"
         summary: The linstor-ha-controller Pod is NOT Ready.
@@ -30,7 +30,7 @@
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
         plk_pending_until_firing_for: "30m"
-        plk_create_group_if_not_exists__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor"
+        plk_create_group_if_not_exists__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-ha-controller"
         plk_grouped_by__d8_linstor_ha_controller_health: "D8LinstorHaControllerHealth,tier=~tier,prometheus=deckhouse"
         summary: The linstor-ha-controller Pod is NOT Running.
         description: |
