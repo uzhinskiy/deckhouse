@@ -55,7 +55,6 @@
       severity_level: "7"
     annotations:
       plk_protocol_version: "1"
-      plk_incident_initial_status: "todo"
       description: Kubelet {{ `{{ $labels.node }}` }} is running {{ `{{ $value }}` }} pods, close
         to the limit of {{ `{{ print "kube_node_status_capacity_pods{node='" $labels.node "'}" | query | first | value }}` }}
       summary: Kubelet is close to pod limit

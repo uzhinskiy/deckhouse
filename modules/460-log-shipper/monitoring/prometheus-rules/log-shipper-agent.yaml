@@ -31,7 +31,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_incident_initial_status: "todo"
       plk_pending_until_firing_for: "5m"
       summary: The log-shipper-agent Pod cannot schedule on Node {{ $labels.node }}
       description: |

@@ -10,7 +10,6 @@
       severity_level: "8"
     annotations:
       plk_protocol_version: "1"
-      plk_incident_initial_status: "todo"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "30m"
       plk_grouped_by__main: "CertificateSecretExpiration,tier=~tier,prometheus=deckhouse"
@@ -33,7 +32,6 @@
       severity_level: "8"
     annotations:
       plk_protocol_version: "1"
-      plk_incident_initial_status: "todo"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "30m"
       plk_grouped_by__main: "CertificateSecretExpiration,tier=~tier,prometheus=deckhouse"
