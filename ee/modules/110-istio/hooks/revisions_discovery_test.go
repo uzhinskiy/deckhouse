@@ -12,7 +12,7 @@ import (
 	. "github.com/deckhouse/deckhouse/testing/hooks"
 )
 
-var _ = FDescribe("Istio hooks :: revisions_discovery ::", func() {
+var _ = Describe("Istio hooks :: revisions_discovery ::", func() {
 	f := HookExecutionConfigInit(`{"istio":{}}`, "")
 	f.RegisterCRD("install.istio.io", "v1alpha1", "IstioOperator", true)
 
@@ -20,7 +20,7 @@ var _ = FDescribe("Istio hooks :: revisions_discovery ::", func() {
 		BeforeEach(func() {
 			values := `
 internal:
-  supportedVersions: ["1.2.3-beta.45", "1.1"]
+  supportedVersions: ["1.1","1.2.3-beta.45"]
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 
