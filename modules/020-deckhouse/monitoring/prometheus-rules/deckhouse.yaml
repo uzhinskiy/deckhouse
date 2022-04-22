@@ -1,38 +1,5 @@
 - name: d8.deckhouse.availability
   rules:
-
-  - alert: D8DeckhouseUnavailable
-    expr: count(ALERTS{alertname=~"D8DeckhouseTargetDown|D8DeckhouseTargetAbsent|D8DeckhousePodIsNotReady|D8DeckhousePodIsNotRunning|D8DeckhouseIsHung",job="deckhouse", alertstate="firing"}) > 0
-    labels:
-      tier: cluster
-      d8_module: deckhouse
-      d8_component: deckhouse
-    annotations:
-      plk_protocol_version: "1"
-      plk_markup_format: "markdown"
-      plk_alert_type: "group"
-      summary: Deckhouse is down.
-      description: |
-        Deckhouse is down.
-
-        You can find out the exact problem in the relevant alerts.
-
-  - alert: D8DeckhouseMalfunctioning
-    expr: count(ALERTS{alertname=~"D8DeckhousePodIsRestartingTooOften|D8DeckhouseCouldNotDiscoverModules|D8DeckhouseCouldNotRunGlobalHook|D8DeckhouseCouldNotRunModuleHook|D8DeckhouseCouldNotRunModule|D8DeckhouseCouldNotDeleteModule|D8DeckhouseQueueIsHung|D8DeckhouseGlobalHookFailsTooOften|D8DeckhouseModuleHookFailsTooOften", alertstate="firing"}) > 0
-    labels:
-      tier: cluster
-      d8_module: deckhouse
-      d8_component: deckhouse
-    annotations:
-      plk_protocol_version: "1"
-      plk_markup_format: "markdown"
-      plk_alert_type: "group"
-      summary: Deckhouse does not work as expected.
-      description: |
-        Deckhouse does not work as expected.
-
-        You can find out the exact problem in the relevant alerts.
-
   - alert: D8DeckhouseSelfTargetDown
     expr: max by (job) (up{job="deckhouse", scrape_source="self"} == 0)
     for: 1m
@@ -84,7 +51,8 @@
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "2m"
-      plk_grouped_by__main: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       summary: There is no Deckhouse target in Prometheus.
 
   - alert: D8DeckhousePodIsNotReady
@@ -104,7 +72,8 @@
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "10m"
-      plk_grouped_by__main: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "pod"
       summary: The Deckhouse Pod is NOT Ready.
 
@@ -125,7 +94,8 @@
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "2m"
-      plk_grouped_by__main: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       summary: The Deckhouse Pod is NOT Running.
 
   - alert: D8DeckhouseIsHung
@@ -138,7 +108,8 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_grouped_by__main: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is down.
       description: |
@@ -163,7 +134,8 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "pod"
       summary: Excessive Deckhouse restarts detected.
       description: |
@@ -185,7 +157,8 @@
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "1h"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to connect to the registry.
       description: |
@@ -205,7 +178,8 @@
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "10m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: The {{ $labels.queue }} Deckhouse queue has hung; there are {{ $value }} task(s) in the queue.
       description: |
@@ -220,11 +194,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 5m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "10m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: The {{ $labels.hook }} Deckhouse global hook crashes way too often.
       description: |
@@ -239,11 +215,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 5m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "10m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: The {{ $labels.module }}/{{ $labels.hook }} Deckhouse hook crashes way too often.
       description: |
@@ -258,11 +236,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 2m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "3m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to discover modules.
       description: |
@@ -275,11 +255,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 2m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "3m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to start the {{ $labels.module }} module.
       description: |
@@ -292,11 +274,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 2m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "3m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to delete the {{ $labels.module }} module.
       description: |
@@ -309,11 +293,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 2m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "3m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to run the {{ $labels.hook }} global hook.
       description: |
@@ -326,11 +312,13 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
+      for: 2m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
       plk_pending_until_firing_for: "3m"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
       summary: Deckhouse is unable to run the {{ $labels.module }}/{{ $labels.hook }} module hook.
       description: |
@@ -347,7 +335,8 @@
     annotations:
       plk_markup_format: "markdown"
       plk_protocol_version: "1"
-      plk_grouped_by__main: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
+      plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
+      plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       description: |
         Deckhouse config contains errors.
 
