@@ -81,6 +81,7 @@ var auditPolicyBasicServiceAccounts = []string{
 	"multicluster-api-proxy",
 	"network-policy-engine",
 	"node-exporter",
+	"node-manager",
 	"node-local-dns",
 	"node-termination-handler",
 	"okmeter",
