@@ -2,6 +2,7 @@
   rules:
   - alert: KubernetesCoreDNSHasCriticalErrors
     expr: sum by (pod) (coredns_panic_count_total{job="kube-dns"}) > 0
+    for: 3m
     labels:
       severity_level: "5"
       tier: cluster
