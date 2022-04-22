@@ -127,7 +127,7 @@ var _ = sdk.RegisterFunc(&go_hook.HookConfig{
 			},
 		},
 	},
-	OnStartup: &go_hook.OrderedConfig{Order: 10},
+	OnBeforeHelm: &go_hook.OrderedConfig{Order: 10},
 }, dependency.WithExternalDependencies(revisionsDiscovery))
 
 func versionToRevision(version string) string {
