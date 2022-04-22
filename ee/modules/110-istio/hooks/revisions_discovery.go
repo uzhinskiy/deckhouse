@@ -77,7 +77,7 @@ func applyGlobalServiceFilter(obj *unstructured.Unstructured) (go_hook.FilterRes
 
 	if version, ok := service.GetAnnotations()["istio.deckhouse.io/global-version"]; ok {
 		globalServiceInfo.Version = version
-	} else if _, ok := service.Spec.Selector["istio.io/rev"]; ok {
+	} else {
 		// migration from v1.10.1: delete this "else" after deploying to all clusters
 		globalServiceInfo.Version = "1.10.1"
 	}
@@ -182,7 +182,7 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 
 	revisionsToInstall = append(revisionsToInstall, additionalRevisions...)
 	if !internal.Contains(revisionsToInstall, globalRevision) {
-		revisionsToInstall = append(additionalRevisions, globalRevision)
+		revisionsToInstall = append(revisionsToInstall, globalRevision)
 	}
 
 	for _, ns := range input.Snapshots["namespaces_definite_revision"] {

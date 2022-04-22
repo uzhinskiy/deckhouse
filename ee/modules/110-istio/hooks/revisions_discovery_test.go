@@ -20,7 +20,7 @@ var _ = FDescribe("Istio hooks :: revisions_discovery ::", func() {
 		BeforeEach(func() {
 			values := `
 internal:
-  supportedVersions: ["1.2.3-beta.45"]
+  supportedVersions: ["1.2.3-beta.45", "1.1"]
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 
@@ -37,6 +37,67 @@ internal:
 			Expect(f.ValuesGet("istio.internal.revisionsToInstall").String()).To(MatchJSON(`["v1x2x3beta45"]`))
 			Expect(f.ValuesGet("istio.internal.operatorRevisionsToInstall").String()).To(MatchJSON(`["v1x2x3beta45"]`))
 			Expect(f.ValuesGet("istio.internal.globalRevision").String()).To(Equal("v1x2x3beta45"))
+		})
+	})
+
+	Context("No globalVersion and global service without annotation", func() {
+		BeforeEach(func() {
+			values := `
+internal:
+  supportedVersions: ["1.10.1", "1.3", "1.4"]
+`
+			f.ValuesSetFromYaml("istio", []byte(values))
+			f.BindingContexts.Set(f.KubeStateSet(`
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: {}
+  name: istiod
+  namespace: d8-istio
+spec: {}
+`))
+
+			f.RunHook()
+		})
+		It("Migration for 1.10.1 should trigger", func() {
+			Expect(f).To(ExecuteSuccessfully())
+			Expect(f.ValuesGet("istio.internal.applicationNamespaces").AsStringSlice()).To(Equal([]string{}))
+			Expect(f.ValuesGet("istio.internal.revisionsToInstall").AsStringSlice()).To(Equal([]string{"v1x10x1"}))
+			Expect(f.ValuesGet("istio.internal.operatorRevisionsToInstall").AsStringSlice()).To(Equal([]string{"v1x10x1"}))
+			Expect(f.ValuesGet("istio.internal.globalRevision").String()).To(Equal("v1x10x1"))
+			Expect(f.ConfigValuesGet("istio.globalVersion").String()).To(Equal("1.10.1"))
+		})
+	})
+
+	Context("No globalVersion and global service with annotation", func() {
+		BeforeEach(func() {
+			values := `
+internal:
+  supportedVersions: ["1.10.1", "1.3", "1.4"]
+`
+			f.ValuesSetFromYaml("istio", []byte(values))
+			f.BindingContexts.Set(f.KubeStateSet(`
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    istio.deckhouse.io/global-version: "1.3"
+  name: istiod
+  namespace: d8-istio
+spec: {}
+`))
+
+			f.RunHook()
+		})
+		It("Migration for 1.10.1 should trigger", func() {
+			Expect(f).To(ExecuteSuccessfully())
+			Expect(f.ValuesGet("istio.internal.applicationNamespaces").AsStringSlice()).To(Equal([]string{}))
+			Expect(f.ValuesGet("istio.internal.revisionsToInstall").AsStringSlice()).To(Equal([]string{"v1x3"}))
+			Expect(f.ValuesGet("istio.internal.operatorRevisionsToInstall").AsStringSlice()).To(Equal([]string{"v1x3"}))
+			Expect(f.ValuesGet("istio.internal.globalRevision").String()).To(Equal("v1x3"))
+			Expect(f.ConfigValuesGet("istio.globalVersion").String()).To(Equal("1.3"))
 		})
 	})
 
