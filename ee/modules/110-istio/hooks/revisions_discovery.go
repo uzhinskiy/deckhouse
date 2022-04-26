@@ -7,7 +7,6 @@ package hooks
 
 import (
 	"fmt"
-	"regexp"
 	"sort"
 	"strings"
 
@@ -127,24 +126,9 @@ var _ = sdk.RegisterFunc(&go_hook.HookConfig{
 			},
 		},
 	},
-	OnBeforeHelm: &go_hook.OrderedConfig{Order: 10},
+	OnBeforeHelm: &go_hook.OrderedConfig{Order: 5}, // Sequence matters for ensure_crds_istio.go
+	OnStartup:    &go_hook.OrderedConfig{Order: 5}, // Sequence matters for ensure_crds_istio.go
 }, dependency.WithExternalDependencies(revisionsDiscovery))
-
-func versionToRevision(version string) string {
-	version = "v" + version
-
-	// v1.2.3-alpha.4 -> v1.2.3-alpha4
-	var re = regexp.MustCompile(`([a-z])\.([0-9])`)
-	version = re.ReplaceAllString(version, `$1$2`)
-
-	// v1.2.3-alpha4 -> v1x2x3-alpha4
-	version = strings.ReplaceAll(version, ".", "x")
-
-	// v1x2x3-alpha4 -> v1x2x3alpha4
-	version = strings.ReplaceAll(version, "-", "")
-
-	return version
-}
 
 func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error {
 	var globalRevision string
@@ -155,24 +139,24 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 	var supportedRevisions []string
 	var supportedVersionsResult = input.Values.Get("istio.internal.supportedVersions").Array()
 	for _, versionResult := range supportedVersionsResult {
-		supportedRevisions = append(supportedRevisions, versionToRevision(versionResult.String()))
+		supportedRevisions = append(supportedRevisions, internal.VersionToRevision(versionResult.String()))
 	}
 
 	var globalVersion string
-	if input.Values.Exists("istio.globalVersion") {
-		globalVersion = input.Values.Get("istio.globalVersion").String()
+	if input.ConfigValues.Exists("istio.globalVersion") {
+		globalVersion = input.ConfigValues.Get("istio.globalVersion").String()
 	} else if len(input.Snapshots["service_global_revision"]) == 1 {
 		globalServiceInfo := input.Snapshots["service_global_revision"][0].(GlobalServiceInfo)
 		globalVersion = globalServiceInfo.Version
 	} else {
-		globalVersion = supportedVersionsResult[len(supportedVersionsResult)-1].String()
+		globalVersion = input.Values.Get("istio.globalVersion").String() // default from openapi/values.yaml
 	}
-	globalRevision = versionToRevision(globalVersion)
+	globalRevision = internal.VersionToRevision(globalVersion)
 
 	var additionalRevisions []string
-	var additionalVersionsResult = input.Values.Get("istio.additionalVersions").Array()
+	var additionalVersionsResult = input.ConfigValues.Get("istio.additionalVersions").Array()
 	for _, versionResult := range additionalVersionsResult {
-		rev := versionToRevision(versionResult.String())
+		rev := internal.VersionToRevision(versionResult.String())
 		if !internal.Contains(additionalRevisions, rev) {
 			additionalRevisions = append(additionalRevisions, rev)
 		}

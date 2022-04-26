@@ -21,6 +21,7 @@ var _ = Describe("Istio hooks :: revisions_discovery ::", func() {
 			values := `
 internal:
   supportedVersions: ["1.1","1.2.3-beta.45"]
+globalVersion: "1.2.3-beta.45"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 
@@ -40,11 +41,12 @@ internal:
 		})
 	})
 
-	Context("No globalVersion and global service without annotation", func() {
+	Context("No globalVersion in CM and global service without annotation", func() {
 		BeforeEach(func() {
 			values := `
 internal:
   supportedVersions: ["1.10.1", "1.3", "1.4"]
+globalVersion: "1.4"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 			f.BindingContexts.Set(f.KubeStateSet(`
@@ -70,11 +72,12 @@ spec: {}
 		})
 	})
 
-	Context("No globalVersion and global service with annotation", func() {
+	Context("No globalVersion in CM and global service with annotation", func() {
 		BeforeEach(func() {
 			values := `
 internal:
   supportedVersions: ["1.10.1", "1.3", "1.4"]
+globalVersion: "1.4"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 			f.BindingContexts.Set(f.KubeStateSet(`
@@ -104,12 +107,13 @@ spec: {}
 	Context("Application namespaces with labels and IstioOperator", func() {
 		BeforeEach(func() {
 			values := `
-globalVersion: "1.1.0"
-additionalVersions: ["1.4","1.3"]
 internal:
   supportedVersions: ["1.1.0", "1.8.0-alpha.2", "1.3", "1.4"]
+globalVersion: "1.4"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
+			f.ConfigValuesSet("istio.globalVersion", "1.1.0")
+			f.ConfigValuesSetFromYaml("istio.additionalVersions", []byte(`["1.4","1.3"]`))
 			f.BindingContexts.Set(f.KubeStateSet(`
 ---
 # regular ns
@@ -214,12 +218,13 @@ spec:
 	Context("Unsupported versions", func() {
 		BeforeEach(func() {
 			values := `
-globalVersion: "1.2.3-beta.45"
-additionalVersions: ["1.7.4", "1.1.0", "1.8.0-alpha.2", "1.3.1", "1.9.0"]
 internal:
   supportedVersions: ["1.1.0","1.2.3-beta.45","1.3.1"]
+globalVersion: "1.3.1"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
+			f.ConfigValuesSet("istio.globalVersion", "1.2.3-beta.45")
+			f.ConfigValuesSetFromYaml("istio.additionalVersions", []byte(`["1.7.4", "1.1.0", "1.8.0-alpha.2", "1.3.1", "1.9.0"]`))
 			f.RunHook()
 		})
 		It("Should return errors", func() {
