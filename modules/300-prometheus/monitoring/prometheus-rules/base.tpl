@@ -3,7 +3,7 @@
 {{- if .Values.prometheus.longtermRetentionDays }}
     - alert: D8PrometheusLongtermTargetAbsent
       expr: absent(up{job="prometheus", namespace="d8-monitoring", service="prometheus-longterm"} == 1)
-      for: 15m
+      for: 30m
       labels:
         severity_level: "7"
         tier: cluster
@@ -12,7 +12,6 @@
       annotations:
         plk_markup_format: "markdown"
         plk_protocol_version: "1"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_longterm_prometheus_malfunctioning: "D8LongtermPrometheusMalfunctioning,tier=cluster,d8_module=prometheus,d8_component=prometheus-longterm"
         plk_grouped_by__d8_longterm_prometheus_malfunctioning: "D8LongtermPrometheusMalfunctioning,tier=cluster,prometheus=deckhouse"
         description: |-
@@ -30,7 +29,7 @@
 
     - alert: D8TricksterTargetAbsent
       expr: (max(up{job="prometheus", service="prometheus"}) == 1) * absent(up{job="trickster", namespace="d8-monitoring"} == 1)
-      for: 1m
+      for: 2m
       labels:
         severity_level: "5"
         tier: cluster
@@ -39,7 +38,6 @@
       annotations:
         plk_markup_format: "markdown"
         plk_protocol_version: "1"
-        plk_pending_until_firing_for: "2m"
         plk_create_group_if_not_exists__d8_prometheus_malfunctioning: "D8PrometheusMalfunctioning,tier=cluster,d8_module=prometheus,d8_component=trickster"
         plk_grouped_by__d8_prometheus_malfunctioning: "D8PrometheusMalfunctioning,tier=cluster,prometheus=deckhouse"
         description: |-

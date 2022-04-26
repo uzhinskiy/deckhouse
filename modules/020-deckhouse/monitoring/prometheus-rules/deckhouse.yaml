@@ -2,7 +2,7 @@
   rules:
   - alert: D8DeckhouseSelfTargetDown
     expr: max by (job) (up{job="deckhouse", scrape_source="self"} == 0)
-    for: 1m
+    for: 2m
     labels:
       severity_level: "4"
       tier: cluster
@@ -12,7 +12,6 @@
       d8_ignore_on_update: "true"
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "2m"
       plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -21,7 +20,7 @@
 
   - alert: D8DeckhouseCustomTargetDown
     expr: max by (job) (up{job="deckhouse", scrape_source="custom"} == 0)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "4"
       tier: cluster
@@ -31,7 +30,6 @@
       d8_ignore_on_update: "true"
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -40,7 +38,7 @@
 
   - alert: D8DeckhouseSelfTargetAbsent
     expr: absent(up{job="deckhouse", scrape_source="self"}) == 1
-    for: 1m
+    for: 2m
     labels:
       severity_level: "4"
       tier: cluster
@@ -50,7 +48,6 @@
       d8_ignore_on_update: "true"
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "2m"
       plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       summary: There is no Deckhouse target in Prometheus.
@@ -61,7 +58,7 @@
         kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
         * on (pod) group_right() kube_pod_status_ready{condition="true", namespace="d8-system"}
       ) != 1
-    for: 5m
+    for: 10m
     labels:
       severity_level: "4"
       tier: cluster
@@ -71,7 +68,6 @@
       d8_ignore_on_update: "true"
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "pod"
@@ -83,7 +79,7 @@
         kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
         * on (pod) group_right() kube_pod_status_phase{namespace="d8-system",phase="Running"}
       )
-    for: 1m
+    for: 2m
     labels:
       severity_level: "4"
       tier: cluster
@@ -93,7 +89,6 @@
       d8_ignore_on_update: "true"
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "2m"
       plk_create_group_if_not_exists__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_unavailable: "D8DeckhouseUnavailable,tier=cluster,prometheus=deckhouse"
       summary: The Deckhouse Pod is NOT Running.
@@ -147,7 +142,7 @@
 
   - alert: D8DeckhouseHasNoAccessToRegistry
     expr: max by (pod, instance) (increase(deckhouse_registry_errors[__SCRAPE_INTERVAL_X_4__])) > 0
-    for: 30m
+    for: 1h
     labels:
       severity_level: "7"
       tier: cluster
@@ -156,7 +151,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "1h"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -168,7 +162,7 @@
 
   - alert: D8DeckhouseQueueIsHung
     expr: max by (pod, instance, queue) (min_over_time(deckhouse_tasks_queue_length{queue!~"main-subqueue-kubernetes-.*|/modules/upmeter/update_selector.*|/modules/secret-copier"}[__SCRAPE_INTERVAL_X_3__])) != 0
-    for: 5m
+    for: 10m
     labels:
       severity_level: "7"
       tier: cluster
@@ -177,7 +171,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -194,11 +187,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 5m
+      for: 10m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -215,11 +207,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 5m
+      for: 10m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -236,11 +227,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 2m
+      for: 3m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "3m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -255,11 +245,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 2m
+      for: 3m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "3m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -274,11 +263,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 2m
+      for: 3m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "3m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -293,11 +281,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 2m
+      for: 3m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "3m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -312,11 +299,10 @@
       tier: cluster
       d8_module: deckhouse
       d8_component: deckhouse
-      for: 2m
+      for: 3m
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "3m"
       plk_create_group_if_not_exists__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,d8_module=deckhouse,d8_component=deckhouse"
       plk_grouped_by__d8_deckhouse_malfunctioning: "D8DeckhouseMalfunctioning,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"

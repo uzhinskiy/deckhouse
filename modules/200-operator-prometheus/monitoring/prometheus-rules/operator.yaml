@@ -2,7 +2,7 @@
   rules:
   - alert: D8PrometheusOperatorTargetDown
     expr: max by (job) (up{job="prometheus-operator"} == 0)
-    for: 15m
+    for: 30m
     labels:
       severity_level: "8"
       tier: cluster
@@ -11,7 +11,6 @@
     annotations:
       plk_markup_format: markdown
       plk_protocol_version: "1"
-      plk_pending_until_firing_for: "30m"
       plk_labels_as_annotations: "instance,pod"
       plk_ignore_labels: "job"
       plk_create_group_if_not_exists__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,d8_module=operator-prometheus,d8_component=prometheus-operator"
@@ -29,7 +28,7 @@
 
   - alert: D8PrometheusOperatorTargetAbsent
     expr: absent(up{job="prometheus-operator"}) == 1
-    for: 15m
+    for: 30m
     labels:
       severity_level: "7"
       tier: cluster
@@ -38,7 +37,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "30m"
       plk_create_group_if_not_exists__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,d8_module=operator-prometheus,d8_component=prometheus-operator"
       plk_grouped_by__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,prometheus=deckhouse"
       summary: There is no `prometheus-operator` target in Prometheus.
@@ -50,7 +48,7 @@
 
   - alert: D8PrometheusOperatorPodIsNotReady
     expr: min by (pod) (kube_pod_status_ready{condition="true", namespace="d8-operator-prometheus", pod=~"prometheus-operator-.*"}) != 1
-    for: 15m
+    for: 30m
     labels:
       severity_level: "7"
       tier: cluster
@@ -59,7 +57,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "30m"
       plk_labels_as_annotations: "pod"
       plk_create_group_if_not_exists__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,d8_module=operator-prometheus,d8_component=prometheus-operator"
       plk_grouped_by__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,prometheus=deckhouse"
@@ -74,7 +71,7 @@
 
   - alert: D8PrometheusOperatorPodIsNotRunning
     expr: absent(kube_pod_status_phase{namespace="d8-operator-prometheus",phase="Running",pod=~"prometheus-operator-.*"})
-    for: 15m
+    for: 30m
     labels:
       severity_level: "7"
       tier: cluster
@@ -83,7 +80,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "30m"
       plk_create_group_if_not_exists__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,d8_module=operator-prometheus,d8_component=prometheus-operator"
       plk_grouped_by__d8_prometheus_operator_unavailable: "D8PrometheusOperatorUnavailable,tier=cluster,prometheus=deckhouse"
       summary: The `prometheus-operator` Pod is NOT Running.

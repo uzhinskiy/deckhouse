@@ -3,7 +3,7 @@
   rules:
   - alert: D8MachineControllerManagerPodIsNotReady
     expr: min by (pod) (kube_pod_status_ready{condition="false", namespace="d8-cloud-instance-manager", pod=~"machine-controller-manager-.*"}) > 0
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -12,7 +12,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,d8_module=node-manager,d8_component=machine-controller-manager"
       plk_grouped_by__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "pod"
@@ -20,7 +19,7 @@
 
   - alert: D8MachineControllerManagerPodIsNotRunning
     expr: max by (namespace, pod, phase) (kube_pod_status_phase{namespace="d8-cloud-instance-manager",phase!="Running",pod=~"machine-controller-manager-.*"} > 0)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -29,7 +28,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,d8_module=node-manager,d8_component=machine-controller-manager"
       plk_grouped_by__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "phase"
@@ -41,7 +39,7 @@
 
   - alert: D8MachineControllerManagerTargetDown
     expr: max by (job) (up{job="machine-controller-manager", namespace="d8-cloud-instance-manager"} == 0)
-    for: 3m
+    for: 5m
     labels:
       severity_level: "8"
       tier: cluster
@@ -50,7 +48,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "5m"
       plk_create_group_if_not_exists__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,d8_module=node-manager,d8_component=machine-controller-manager"
       plk_grouped_by__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -59,7 +56,7 @@
 
   - alert: D8MachineControllerManagerTargetAbsent
     expr: absent(up{job="machine-controller-manager", namespace="d8-cloud-instance-manager"} == 1)
-    for: 3m
+    for: 5m
     labels:
       severity_level: "8"
       tier: cluster
@@ -68,7 +65,6 @@
     annotations:
       plk_markup_format: "markdown"
       plk_protocol_version: "1"
-      plk_pending_until_firing_for: "5m"
       plk_create_group_if_not_exists__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,d8_module=node-manager,d8_component=machine-controller-manager"
       plk_grouped_by__d8_machine_controller_manager_unavailable: "D8MachineControllerManagerUnavailable,tier=cluster,prometheus=deckhouse"
       summary: There is no machine-controller-manager target in Prometheus.

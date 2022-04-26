@@ -3,7 +3,7 @@
   - alert: DeckhouseModuleUseEmptyDir
     expr: |
       d8_emptydir_usage == 1
-    for: 5m
+    for: 10m
     labels:
       tier: cluster
       severity_level: "9"
@@ -12,7 +12,6 @@
       plk_protocol_version: "1"
       plk_create_group_if_not_exists__deckhouse_module_use_empty_dir: DeckhouseModuleUseEmptyDir,prometheus=deckhouse,tier=cluster,d8_module=prometheus,d8_component=prometheus
       plk_group_for__deckhouse_module_use_empty_dir: DeckhouseModuleUseEmptyDir,prometheus=deckhouse
-      plk_pending_until_firing_for: "10m"
       summary: Deckhouse module {{ $labels.module_name }} use emptydir as storage.
       description: |
         Deckhouse module {{ $labels.module_name }} use emptydir as storage.

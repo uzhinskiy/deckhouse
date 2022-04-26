@@ -9,7 +9,6 @@
       annotations:
         plk_markup_format: "markdown"
         plk_protocol_version: "1"
-        plk_pending_until_firing_for: "1m"
         plk_create_group_if_not_exists__d8_piraeus_operator_health: ",D8PiraeusOperatorHealthtier=cluster,d8_module=linstor,d8_component=linstor-piraeus-operator"
         plk_grouped_by__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=~tier,prometheus=deckhouse"
         plk_ignore_labels: "job"
@@ -21,14 +20,13 @@
 
     - alert: D8PiraeusOperatorTargetAbsent
       expr: absent(up{job="piraeus-operator"}) == 1
-      for: 10m
+      for: 15m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "15m"
         plk_ignore_labels: "job"
         plk_create_group_if_not_exists__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=cluster,d8_module=linstor,d8_component=linstor-piraeus-operator"
         plk_grouped_by__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=~tier,prometheus=deckhouse"
@@ -40,14 +38,13 @@
 
     - alert: D8PiraeusOperatorPodIsNotReady
       expr: min by (pod) (kube_pod_status_ready{condition="true", namespace="d8-linstor", pod=~"piraeus-operator-.*"}) != 1
-      for: 15m
+      for: 30m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
         plk_create_group_if_not_exists__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=cluster,d8_module=linstor,d8_component=linstor-piraeus-operator"
         plk_grouped_by__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=~tier,prometheus=deckhouse"
@@ -59,14 +56,13 @@
 
     - alert: D8PiraeusOperatorPodIsNotRunning
       expr: absent(kube_pod_status_phase{namespace="d8-linstor",phase="Running",pod=~"piraeus-operator-.*"})
-      for: 15m
+      for: 30m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=cluster,d8_module=linstor,d8_component=linstor-piraeus-operator"
         plk_grouped_by__d8_piraeus_operator_health: "D8PiraeusOperatorHealth,tier=~tier,prometheus=deckhouse"
         summary: The piraeus-operator Pod is NOT Running.

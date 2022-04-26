@@ -6,13 +6,13 @@
           max by (node, mountpoint) (node_filesystem_files_free / node_filesystem_files) >
           max by (node, mountpoint) (kubelet_eviction_nodefs_inodes{type="soft"})
         ) * 100
+      for: 10m
       labels:
         severity_level: "9"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "10m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -29,13 +29,13 @@
           max by (node, mountpoint) (node_filesystem_files_free / node_filesystem_files) >
           max by (node, mountpoint) (kubelet_eviction_nodefs_inodes{type="hard"} - 5)
         ) * 100
+      for: 5m
       labels:
         severity_level: "7"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "5m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -93,13 +93,13 @@
           max by (node, mountpoint) (node_filesystem_files_free / node_filesystem_files) >
           max by (node, mountpoint) (kubelet_eviction_imagefs_inodes{type="soft"})
         ) * 100
+      for: 10m
       labels:
         severity_level: "9"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "10m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -116,13 +116,13 @@
           max by (node, mountpoint) (node_filesystem_files_free / node_filesystem_files) >
           max by (node, mountpoint) (kubelet_eviction_imagefs_inodes{type="hard"} - 5)
         ) * 100
+      for: 5m
       labels:
         severity_level: "7"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "5m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -181,13 +181,13 @@
           max by (node, mountpoint) ((node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes) * 100 >
           max by (node, mountpoint) (kubelet_eviction_nodefs_bytes{type="soft"})
         )
+      for: 10m
       labels:
         severity_level: "9"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "10m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -204,13 +204,13 @@
           max by (node, mountpoint) ((node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes) * 100 >
           max by (node, mountpoint) (kubelet_eviction_nodefs_bytes{type="hard"} - 5)
         )
+      for: 5m
       labels:
         severity_level: "7"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "5m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -267,13 +267,13 @@
           max by (node, mountpoint) ((node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes) * 100 >
           max by (node, mountpoint) (kubelet_eviction_imagefs_bytes{type="soft"})
         )
+      for: 10m
       labels:
         severity_level: "9"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "10m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |
@@ -290,13 +290,13 @@
           max by (node, mountpoint) ((node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes) * 100 >
           max by (node, mountpoint) (kubelet_eviction_imagefs_bytes{type="hard"} - 5)
         )
+      for: 5m
       labels:
         severity_level: "7"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: markdown
-        plk_pending_until_firing_for: "5m"
         plk_create_group_if_not_exists__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster"
         plk_grouped_by__node_partition_disk_usage: "NodePartitionDiskUsage,tier=cluster,prometheus=deckhouse,node={{ $labels.node }},mountpoint={{ $labels.mountpoint }}"
         description: |

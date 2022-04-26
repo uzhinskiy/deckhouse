@@ -28,7 +28,6 @@
       annotations:
         plk_markup_format: "markdown"
         plk_protocol_version: "1"
-        plk_pending_until_firing_for: "1m"
         plk_create_group_if_not_exists__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-controller"
         plk_grouped_by__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=~tier,prometheus=deckhouse"
         plk_ignore_labels: "job"
@@ -43,11 +42,10 @@
       labels:
         severity_level: "6"
         tier: cluster
-      for: 10m
+      for: 15m
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "15m"
         plk_ignore_labels: "job"
         plk_create_group_if_not_exists__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-controller"
         plk_grouped_by__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=~tier,prometheus=deckhouse"
@@ -62,11 +60,10 @@
       labels:
         severity_level: "6"
         tier: cluster
-      for: 15m
+      for: 30m
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
         plk_create_group_if_not_exists__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-controller"
         plk_grouped_by__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=~tier,prometheus=deckhouse"
@@ -81,11 +78,10 @@
       labels:
         severity_level: "6"
         tier: cluster
-      for: 15m
+      for: 30m
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-controller"
         plk_grouped_by__d8_linstor_controller_health: "D8LinstorControllerHealth,tier=~tier,prometheus=deckhouse"
         summary: The linstor-controller Pod is NOT Running.

@@ -9,7 +9,6 @@
       annotations:
         plk_markup_format: "markdown"
         plk_protocol_version: "1"
-        plk_pending_until_firing_for: "1m"
         plk_create_group_if_not_exists__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,d8_module=snapshot-controller,d8_component=snapshot-controller"
         plk_grouped_by__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,prometheus=deckhouse"
         plk_ignore_labels: "job"
@@ -21,14 +20,13 @@
 
     - alert: D8SnapshotControllerTargetAbsent
       expr: absent(up{job="snapshot-controller"}) == 1
-      for: 10m
+      for: 15m
       labels:
         severity_level: "8"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "15m"
         plk_ignore_labels: "job"
         plk_create_group_if_not_exists__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,d8_module=snapshot-controller,d8_component=snapshot-controller"
         plk_grouped_by__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,prometheus=deckhouse"
@@ -40,14 +38,13 @@
 
     - alert: D8SnapshotControllerPodIsNotReady
       expr: min by (pod) (kube_pod_status_ready{condition="true", namespace="d8-snapshot-controller", pod=~"snapshot-controller-.*"}) != 1
-      for: 15m
+      for: 30m
       labels:
         severity_level: "8"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
         plk_create_group_if_not_exists__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,d8_module=snapshot-controller,d8_component=snapshot-controller"
         plk_grouped_by__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,prometheus=deckhouse"
@@ -59,14 +56,13 @@
 
     - alert: D8SnapshotControllerPodIsNotRunning
       expr: absent(kube_pod_status_phase{namespace="d8-snapshot-controller",phase="Running",pod=~"snapshot-controller-.*"})
-      for: 15m
+      for: 30m
       labels:
         severity_level: "8"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,d8_module=snapshot-controller,d8_component=snapshot-controller"
         plk_grouped_by__d8_snapshot_controller_health: "D8SnapshotControllerHealth,tier=~tier,prometheus=deckhouse"
         summary: The snapshot-controller Pod is NOT Running.

@@ -39,14 +39,13 @@
 
     - alert: D8LinstorNodePodIsNotReady
       expr: min by (pod) (avg by(node,pod,namespace)(kube_pod_info{}) * on(pod, namespace) group_right(node) kube_pod_status_ready{condition="true", namespace="d8-linstor", pod=~"linstor-node-.*"}) != 1
-      for: 15m
+      for: 30m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
         plk_create_group_if_not_exists__d8_linstor_node_health: "D8LinstorNodeHealth,tier=cluster,d8_module=linstor,d8_component=linstor-node"
         plk_grouped_by__d8_linstor_node_health: "D8LinstorNodeHealth,tier=~tier,prometheus=deckhouse"
@@ -58,14 +57,13 @@
 
     - alert: D8LinstorNodePodIsNotRunning
       expr: absent(avg by(node,pod,namespace)(kube_pod_info{}) * on(pod, namespace) group_right(node) kube_pod_status_phase{namespace="d8-linstor",phase="Running",pod=~"linstor-node-.*"})
-      for: 15m
+      for: 30m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_linstor_node_health: "D8LinstorNodeHealth,tier=cluster,d8_module=linstor,d8_component=linstor-node"
         plk_grouped_by__d8_linstor_node_health: "D8LinstorNodeHealth,tier=~tier,prometheus=deckhouse"
         summary: The linstor-node Pod is NOT Running.

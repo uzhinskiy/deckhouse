@@ -1,7 +1,7 @@
 - name: d8.control-plane-manager.malfunctioning
   rules:
   - alert: D8ControlPlaneManagerPodNotRunning
-    for: 5m
+    for: 10m
     expr: |
       max by (node) (
         kube_node_role{role="master"}
@@ -25,7 +25,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_control_plane_manager_unavailable: "D8ControlPlaneManagerUnavailable,tier=cluster,d8_module=control-plane-manager,d8_component=control-plane-manager"
       plk_grouped_by__d8_control_plane_manager_unavailable: "D8ControlPlaneManagerUnavailable,tier=cluster,prometheus=deckhouse"
       summary: Controller Pod not running on Node {{ $labels.node }}

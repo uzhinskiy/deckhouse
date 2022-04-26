@@ -6,7 +6,7 @@
         kube_controller_pod{namespace="d8-monitoring", controller_type="Deployment", controller_name="grafana"}
         * on (pod) group_right() kube_pod_status_ready{condition="true", namespace="d8-monitoring"}
       ) != 1
-    for: 3m
+    for: 5m
     labels:
       severity_level: "6"
       tier: cluster
@@ -17,7 +17,6 @@
       plk_markup_format: "markdown"
       plk_create_group_if_not_exists__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse,d8_module=prometheus,db_component=grafana"
       plk_grouped_by__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse"
-      plk_pending_until_firing_for: "5m"
       plk_labels_as_annotations: "pod"
       summary: The Grafana Pod is NOT Ready.
 
@@ -33,7 +32,7 @@
           * on(pod) group_right() kube_pod_status_phase{namespace="d8-monitoring", phase="Running"} == 1
         )
       ) == 1
-    for: 3m
+    for: 5m
     labels:
       severity_level: "6"
       tier: cluster
@@ -42,7 +41,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "5m"
       plk_create_group_if_not_exists__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse,d8_module=prometheus,db_component=grafana"
       plk_grouped_by__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "phase"
@@ -58,7 +56,7 @@
 
   - alert: D8GrafanaTargetDown
     expr: max by (job) (up{job="grafana", namespace="d8-monitoring"} == 0)
-    for: 3m
+    for: 5m
     labels:
       severity_level: "6"
       tier: cluster
@@ -67,7 +65,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "5m"
       plk_create_group_if_not_exists__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse,d8_module=prometheus,db_component=grafana"
       plk_grouped_by__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse"
       plk_labels_as_annotations: "instance,pod"
@@ -76,7 +73,7 @@
 
   - alert: D8GrafanaTargetAbsent
     expr: absent(up{job="grafana", namespace="d8-monitoring"} == 1)
-    for: 3m
+    for: 5m
     labels:
       severity_level: "6"
       tier: cluster
@@ -85,7 +82,6 @@
     annotations:
       plk_markup_format: "markdown"
       plk_protocol_version: "1"
-      plk_pending_until_firing_for: "5m"
       plk_create_group_if_not_exists__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse,d8_module=prometheus,db_component=grafana"
       plk_grouped_by__d8_grafana_unavailable: "D8GrafanaUnavailable,tier=cluster,prometheus=deckhouse"
       summary: There is no Grafana target in Prometheus.

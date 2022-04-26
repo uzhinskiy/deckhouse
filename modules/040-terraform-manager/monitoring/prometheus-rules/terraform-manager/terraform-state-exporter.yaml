@@ -3,7 +3,7 @@
 
   - alert: D8TerraformStateExporterTargetDown
     expr: max by (job) (up{job="terraform-state-exporter"} == 0)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -12,7 +12,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,prometheus=deckhouse"
       plk_ignore_labels: "job"
@@ -25,7 +24,7 @@
 
   - alert: D8TerraformStateExporterTargetAbsent
     expr: absent(up{job="terraform-state-exporter"}) == 1
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -34,7 +33,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_ignore_labels: "job"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,prometheus=deckhouse"
@@ -51,7 +49,7 @@
         kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="terraform-state-exporter"}
         * on (pod) group_right() kube_pod_status_ready{condition="true", namespace="d8-system"}
       ) != 1
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -60,7 +58,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_labels_as_annotations: "pod"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,prometheus=deckhouse"
@@ -79,7 +76,7 @@
         * on (pod) group_right() kube_pod_status_phase{namespace="d8-system",phase!="Running"}
         > 0
       )
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -88,7 +85,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_unavailable: "D8TerraformStateExporterUnavailable,tier=cluster,prometheus=deckhouse"
       summary: Pod terraform-state-exporter is not Running
@@ -105,7 +101,7 @@
   - alert: D8TerraformStateExporterHasErrors
     expr: |
       increase(candi_converge_exporter_errors{job="terraform-state-exporter"}[5m]) == 3
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -114,7 +110,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |
@@ -126,7 +121,7 @@
   - alert: D8TerraformStateExporterClusterStateChanged
     expr: |
       max by(job, status) (candi_converge_cluster_status{status=~"changed|destructively_changed", job="terraform-state-exporter"} == 1)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -135,7 +130,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |
@@ -148,7 +142,7 @@
   - alert: D8TerraformStateExporterNodeStateChanged
     expr: |
       max by(node_group, name, status) (candi_converge_node_status{status=~"changed|destructively_changed|absent|abandoned", job="terraform-state-exporter"} == 1)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -157,7 +151,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |
@@ -170,7 +163,7 @@
   - alert: D8TerraformStateExporterClusterStateError
     expr: |
       max by(job) (candi_converge_cluster_status{status="error", job="terraform-state-exporter"} == 1)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -179,7 +172,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |
@@ -192,7 +184,7 @@
   - alert: D8TerraformStateExporterNodeStateError
     expr: |
       max by(node_group, name) (candi_converge_node_status{status="error", job="terraform-state-exporter"} == 1)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -201,7 +193,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |
@@ -214,7 +205,7 @@
   - alert: D8TerraformStateExporterNodeTemplateChanged
     expr: |
       max by(job) (candi_converge_node_template_status{status!="ok", job="terraform-state-exporter"} == 1)
-    for: 5m
+    for: 10m
     labels:
       severity_level: "8"
       tier: cluster
@@ -223,7 +214,6 @@
     annotations:
       plk_protocol_version: "1"
       plk_markup_format: "markdown"
-      plk_pending_until_firing_for: "10m"
       plk_create_group_if_not_exists__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,d8_module=terraform-manager,d8_component=terraform-state-exporter"
       plk_grouped_by__d8_terraform_state_exporter_checks_failed: "D8TerraformStateExporterChecksFailed,tier=cluster,prometheus=deckhouse"
       description: |

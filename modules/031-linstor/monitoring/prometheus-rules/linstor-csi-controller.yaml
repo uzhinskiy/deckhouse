@@ -2,14 +2,13 @@
   rules:
     - alert: D8LinstorCsiControllerPodIsNotReady
       expr: min by (pod) (kube_pod_status_ready{condition="true", namespace="d8-linstor", pod=~"linstor-csi-controller-.*"}) != 1
-      for: 15m
+      for: 30m
       labels:
         severity_level: "6"
         tier: cluster
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_labels_as_annotations: "pod"
         plk_create_group_if_not_exists__d8_linstor_csi_controller_health: "D8LinstorCsiControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-csi-controller"
         plk_grouped_by__d8_linstor_csi_controller_health: "D8LinstorCsiControllerHealth,tier=~tier,prometheus=deckhouse"
@@ -24,11 +23,10 @@
       labels:
         severity_level: "6"
         tier: cluster
-      for: 15m
+      for: 30m
       annotations:
         plk_protocol_version: "1"
         plk_markup_format: "markdown"
-        plk_pending_until_firing_for: "30m"
         plk_create_group_if_not_exists__d8_linstor_csi_controller_health: "D8LinstorCsiControllerHealth,tier=cluster,d8_module=linstor,d8_component=linstor-csi-controller"
         plk_grouped_by__d8_linstor_csi_controller_health: "D8LinstorCsiControllerHealth,tier=~tier,prometheus=deckhouse"
         summary: The linstor-csi-controller Pod is NOT Running.
