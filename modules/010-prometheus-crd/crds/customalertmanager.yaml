@@ -74,12 +74,12 @@ spec:
                             password:
                               type: string
                               format: password
-                          bearerToken:
-                            type: string
-                            description: 'Bearer token authorization.'
+                            bearerToken:
+                              type: string
+                              description: 'Bearer token authorization.'
                     tls:
                       type: object
-                      desciption: 'TLS settings.'
+                      description: 'TLS settings.'
                       properties:
                         ca:
                           type: string
@@ -2479,13 +2479,13 @@ spec:
                       type: object
               oneOf:
                 - properties:
-                    type: External
-                    external: {}
-                    required: [external]
+                    type:
+                      enum: [External]
+                      required: [type, external]
                 - properties:
-                    type: Internal
-                    internal: {}
-                    required: [internal]
+                    type:
+                      enum: [Internal]
+                      required: [type, internal]
       additionalPrinterColumns:
         - jsonPath: .spec.type
           name: Type
