@@ -1,5 +1,4 @@
 - name: d8.prometheus-madison-integration.sending-alerts
-  for: 10m
   rules:
     - alert: D8PrometheusMadisonErrorSendingAlertsToBackend
       expr: |
