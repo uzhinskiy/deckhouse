@@ -186,7 +186,7 @@ spec:
         ]`))
 		})
 	})
-	FContext("Cluster has internal CustomAlertManager", func() {
+	Context("Cluster has internal CustomAlertManager", func() {
 		BeforeEach(func() {
 			f.BindingContexts.Set(f.KubeStateSetAndWaitForBindingContexts(stateInternalAlertManager, 1))
 			f.RunHook()
@@ -195,6 +195,7 @@ spec:
 			Expect(f).To(ExecuteSuccessfully())
 			Expect(f.ValuesGet("prometheus.internal.alertmanagers.internal").String()).To(MatchJSON(`[
           {
+			"name": "wechat",
             "receivers": [
               {
                 "name": "wechat-example",

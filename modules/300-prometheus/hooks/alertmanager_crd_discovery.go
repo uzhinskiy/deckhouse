@@ -148,6 +148,7 @@ func crdAlertmanagerHandler(input *go_hook.HookInput) error {
 		}
 		// Internal AlertManager
 		if value, ok, _ := unstructured.NestedMap(am.Spec, "internal"); ok {
+			value["name"] = am.Name
 			internalDeclaredAlertmanagers = append(internalDeclaredAlertmanagers, value)
 		}
 	}
