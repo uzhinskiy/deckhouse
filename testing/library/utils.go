@@ -35,7 +35,7 @@ var tags map[string]map[string]string
 
 func init() {
 	tags = make(map[string]map[string]string)
-	for _, pattern := range []string{"/deckhouse/modules/*", "/deckhouse/ee/modules/*", "/deckhouse/ee/fe/modules/*"} {
+	for _, pattern := range []string{"/deckhouse/modules/*", "/deckhouse/ee/modules/*"} {
 		paths, err := filepath.Glob(pattern)
 		if err != nil {
 			panic(err)

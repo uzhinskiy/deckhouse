@@ -82,7 +82,7 @@ steps:
       if [[ -n "${DEV_REGISTRY_PATH}" ]]; then export WERF_REPO="${DEV_REGISTRY_PATH}"; fi
       type werf && source $(werf ci-env github --verbose --as-file)
 
-      # CE/EE/FE -> ce/ee/fe
+      # CE/EE -> ce/ee
       REGISTRY_SUFFIX=$(echo ${WERF_ENV} | tr '[:upper:]' '[:lower:]')
 
       # Registry path to publish images for Git branches.

@@ -128,12 +128,6 @@ func main() {
 	}
 	moduleDirs = append(moduleDirs, additionalModuleDirs...)
 
-	additionalModuleDirs, err = filepath.Glob(filepath.Join(workDir, "ee/fe/modules/*/hooks"))
-	if err != nil {
-		panic(err)
-	}
-	moduleDirs = append(moduleDirs, additionalModuleDirs...)
-
 	for _, dir := range moduleDirs {
 		if err := searchHooks(&hookModules, dir, workDir); err != nil {
 			panic(err)

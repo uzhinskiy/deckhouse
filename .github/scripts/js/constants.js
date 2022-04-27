@@ -118,6 +118,5 @@ module.exports.e2eDefaults = {
 const editions = [
   'CE',
   'EE',
-  'FE'
 ];
 module.exports.knownEditions = editions;

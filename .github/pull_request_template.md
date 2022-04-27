@@ -59,7 +59,6 @@ gh pr diff   $PULL_REQUEST_NUMBER   |
   egrep "^([+]{3} b|[-]{3} a)/" |
   cut -d/ -f2- |
   sed 's#^ee/##' |
-  sed 's#^fe/##' |
   sed 's#^modules/##' |
   sed 's#[0-9][0-9][0-9]-##' |
   egrep -v 'Makefile' |       # add file exclusion here

@@ -493,7 +493,7 @@ Such an approach allows you to avoid the re-provisioning of PVs (and data loss) 
 
 Note that you cannot mutate the `volumeClaimTemplate`.  Thus, you must delete a statefulset (e.g., using a webhook) when changing the storageClass.
 
-You can find a relevant example in the [prometheus](https://github.com/deckhouse/deckhouse/blob/main/modules/300-prometheus/hooks/prometheus_storage_class_change) and [openvpn](https://github.com/deckhouse/deckhouse/blob/main/ee/fe/modules/500-openvpn/hooks/storage_class_change.go) modules' hooks.
+You can find a relevant example in the [prometheus](https://github.com/deckhouse/deckhouse/blob/main/modules/300-prometheus/hooks/prometheus_storage_class_change) and [openvpn](https://github.com/deckhouse/deckhouse/blob/main/ee/modules/500-openvpn/hooks/storage_class_change.go) modules' hooks.
 
 ### CRDs
 

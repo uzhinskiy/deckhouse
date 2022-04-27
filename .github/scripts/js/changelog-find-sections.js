@@ -10,7 +10,6 @@ module.exports = function findSections() {
     '.',
     'modules',
     'ee/modules',
-    'ee/fe/modules'
   ];
 
   const exclusions = [

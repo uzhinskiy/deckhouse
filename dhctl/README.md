@@ -120,7 +120,7 @@ For example, use a docker image from the Flant docker registry:
      docker run -it \
        -v "$PWD/config.yaml:/config.yaml" \
        -v "$HOME/.ssh/:/tmp/.ssh/" \
-       registry.deckhouse.io/fe/install:alpha \
+       registry.deckhouse.io/ee/install:alpha \
        bash
      ```
      > MacOS users do not need to mount the .ssh folder to the `/tmp`.

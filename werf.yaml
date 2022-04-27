@@ -235,10 +235,6 @@ ansible:
 {{- if eq $.Env "EE" }}
         {{- $.Files.Get (printf "ee/modules/values-%s.yaml" $key ) | nindent 8 }}
 {{- end }}
-{{- if eq $.Env "FE" }}
-        {{- $.Files.Get (printf "ee/modules/values-%s.yaml" $key ) | nindent 8 }}
-        {{- $.Files.Get (printf "ee/fe/modules/values-%s.yaml" $key ) | nindent 8 }}
-{{- end }}
       dest: /deckhouse/modules/values-{{ $key }}.yaml
 {{- end }}
 
@@ -744,10 +740,6 @@ args:
 {{ $ModulesImagesBuildFiles := .Files.Glob "modules/*/images/*/{Dockerfile,werf.inc.yaml}" }}
 {{- if eq .Env "EE" }}
   {{ $ModulesImagesBuildFiles = merge $ModulesImagesBuildFiles (.Files.Glob "ee/modules/*/images/*/{Dockerfile,werf.inc.yaml}") }}
-{{- end }}
-{{- if eq .Env "FE" }}
-  {{ $ModulesImagesBuildFiles = merge $ModulesImagesBuildFiles (.Files.Glob "ee/modules/*/images/*/{Dockerfile,werf.inc.yaml}") }}
-  {{ $ModulesImagesBuildFiles = merge $ModulesImagesBuildFiles (.Files.Glob "ee/fe/modules/*/images/*/{Dockerfile,werf.inc.yaml}") }}
 {{- end }}
 
 {{- range $path, $content := $ModulesImagesBuildFiles  }}

@@ -84,7 +84,6 @@ func GetAllOpenAPIDirs() ([]string, error) {
 	for _, possibleDir := range []string{
 		"/deckhouse/modules/*/openapi",
 		"/deckhouse/ee/modules/*/openapi",
-		"/deckhouse/ee/fe/modules/*/openapi",
 	} {
 		globDirs, err := filepath.Glob(possibleDir)
 		if err != nil {

@@ -153,7 +153,6 @@ func GetDeckhouseModulesWithValuesMatrixTests() ([]utils.Module, error) {
 		possibleModulesPaths = []string{
 			"/deckhouse/modules",
 			"/deckhouse/ee/modules",
-			"/deckhouse/ee/fe/modules",
 		}
 	} else {
 		possibleModulesPaths = []string{modulesDir}

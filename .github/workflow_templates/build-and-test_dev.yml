@@ -26,16 +26,6 @@ jobs:
 {!{ tmpl.Exec "pull_request_info_job" $ctx | strings.Indent 2 }!}
 {!{ tmpl.Exec "git_info_job" $ctx | strings.Indent 2 }!}
 
-  enable_fe:
-    if: ${{ needs.pull_request_info.outputs.edition == 'FE' }}
-    name: Enable FE
-    needs:
-      - pull_request_info
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo Enable ${{ needs.pull_request_info.outputs.edition }}
-
   enable_ee:
     if: ${{ needs.pull_request_info.outputs.edition == 'EE' }}
     name: Enable EE

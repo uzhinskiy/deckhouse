@@ -65,7 +65,6 @@ func GetAllHooks() ([]Hook, error) {
 	for _, possibleDir := range []string{
 		"/deckhouse/modules/*/hooks",
 		"/deckhouse/ee/modules/*/hooks",
-		"/deckhouse/ee/fe/modules/*/hooks",
 	} {
 		result, err := filepath.Glob(possibleDir)
 		if err != nil {

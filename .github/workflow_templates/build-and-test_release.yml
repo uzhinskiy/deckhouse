@@ -57,17 +57,6 @@ jobs:
 {!{ tmpl.Exec "go_generate_template" $ctx | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.go_generate) | strings.Indent 6 }!}
 
-{!{ $jobNames = coll.Merge $jobNames (dict "build_fe" "Build FE") }!}
-  build_fe:
-    name: {!{ $jobNames.build_fe }!}
-    needs:
-      - git_info
-      - go_generate
-    env:
-      WERF_ENV: "FE"
-{!{ tmpl.Exec "build_template" (slice $ctx "release") | strings.Indent 4 }!}
-{!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.build_fe) | strings.Indent 6 }!}
-
 {!{ $jobNames = coll.Merge $jobNames (dict "build_ee" "Build EE") }!}
   build_ee:
     name: {!{ $jobNames.build_ee }!}
@@ -115,8 +104,8 @@ jobs:
     name: {!{ $jobNames.tests }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "unit" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "unit" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.tests) | strings.Indent 6 }!}
 
 {!{ $jobNames = coll.Merge $jobNames (dict "matrix_tests" "Matrix tests") }!}
@@ -124,8 +113,8 @@ jobs:
     name: {!{ $jobNames.matrix_tests }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "matrix" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "matrix" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.matrix_tests) | strings.Indent 6 }!}
 
 {!{ $jobNames = coll.Merge $jobNames (dict "dhctl_tests" "Dhctl Tests") }!}
@@ -133,8 +122,8 @@ jobs:
     name: {!{ $jobNames.dhctl_tests }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "dhctl" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "dhctl" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.dhctl_tests) | strings.Indent 6 }!}
 
 {!{ $jobNames = coll.Merge $jobNames (dict "golangci_lint" "GolangCI Lint") }!}
@@ -142,8 +131,8 @@ jobs:
     name: {!{ $jobNames.golangci_lint }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "golangci_lint" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "golangci_lint" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.golangci_lint) | strings.Indent 6 }!}
 
 {!{ $jobNames = coll.Merge $jobNames (dict "openapi_test_cases" "OpenAPI Test Cases") }!}
@@ -151,8 +140,8 @@ jobs:
     name: {!{ $jobNames.openapi_test_cases }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "openapi_test_cases" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "openapi_test_cases" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.openapi_test_cases) | strings.Indent 6 }!}
 
 {!{ $jobNames = coll.Merge $jobNames (dict "web_links_test" "Web links test") }!}
@@ -170,8 +159,8 @@ jobs:
     name: {!{ $jobNames.validators }!}
     needs:
       - git_info
-      - build_fe
-{!{ tmpl.Exec "tests_template" (slice $ctx "validators" "build_fe") | strings.Indent 4 }!}
+      - build_ee
+{!{ tmpl.Exec "tests_template" (slice $ctx "validators" "build_ee") | strings.Indent 4 }!}
 {!{ tmpl.Exec "update_comment_on_finish" (slice "job,one-line" $jobNames.validators) | strings.Indent 6 }!}
 
 {!{/* Autodeploy site and docs to production env on push to main branch. */}!}
@@ -217,7 +206,6 @@ jobs:
       - started_at
       - git_info
       - go_generate
-      - build_fe
       - build_ee
       - build_ce
       - doc_web_build
