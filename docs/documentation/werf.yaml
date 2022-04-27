@@ -1,5 +1,5 @@
 {{- if ne $.Env "development" -}}
-{{- $_ := set . "Env" "FE" }}
+{{- $_ := set . "Env" "EE" }}
 {{- end }}
 
 project: deckhouse-web
