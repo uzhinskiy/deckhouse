@@ -6,10 +6,8 @@ Licensed under the Deckhouse Platform Enterprise Edition (EE) license. See https
 package hooks
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-
 	. "github.com/deckhouse/deckhouse/testing/hooks"
+	. "github.com/onsi/ginkgo"
 )
 
 var _ = Describe("Modules :: namespace-configurator :: hooks :: handler ::", func() {

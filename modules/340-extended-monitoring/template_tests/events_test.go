@@ -6,25 +6,23 @@ Licensed under the Deckhouse Platform Enterprise Edition (EE) license. See https
 package template_tests
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-
 	. "github.com/deckhouse/deckhouse/testing/helm"
+	. "github.com/onsi/ginkgo"
 )
 
-func checkCertExporterObjects(hec *Config, exist bool) {
+func checkEventsObjects(hec *Config, exist bool) {
 	matcher := BeFalse()
 	if exist {
 		matcher = BeTrue()
 	}
 
-	Expect(hec.KubernetesResource("Deployment", "d8-monitoring", "cert-exporter").Exists()).To(matcher)
-	Expect(hec.KubernetesResource("VerticalPodAutoscaler", "d8-monitoring", "cert-exporter").Exists()).To(matcher)
-	Expect(hec.KubernetesResource("PodDisruptionBudget", "d8-monitoring", "cert-exporter").Exists()).To(matcher)
-	Expect(hec.KubernetesResource("ServiceAccount", "d8-monitoring", "cert-exporter").Exists()).To(matcher)
+	Expect(hec.KubernetesResource("Deployment", "d8-monitoring", "events-exporter").Exists()).To(matcher)
+	Expect(hec.KubernetesResource("VerticalPodAutoscaler", "d8-monitoring", "events-exporter").Exists()).To(matcher)
+	Expect(hec.KubernetesResource("PodDisruptionBudget", "d8-monitoring", "events-exporter").Exists()).To(matcher)
+	Expect(hec.KubernetesResource("ServiceAccount", "d8-monitoring", "events-exporter").Exists()).To(matcher)
 }
 
-var _ = Describe("Module :: extendedMonitoring :: helm template :: cert-exporter ", func() {
+var _ = Describe("Module :: extendedMonitoring :: helm template :: events ", func() {
 	hec := SetupHelmConfig("")
 	BeforeEach(func() {
 		hec.ValuesSet("global.discovery.kubernetesVersion", "1.15.6")
@@ -36,28 +34,30 @@ var _ = Describe("Module :: extendedMonitoring :: helm template :: cert-exporter
 		hec.ValuesSet("global.discovery.d8SpecificNodeCountByRole.system", 2)
 	})
 
-	Context("With certificates.exporterEnabled", func() {
+	Context("With events.exporterEnabled", func() {
 		BeforeEach(func() {
-			hec.ValuesSet("extendedMonitoring.certificates.exporterEnabled", true)
+			hec.ValuesSet("extendedMonitoring.events.exporterEnabled", true)
+			hec.ValuesSet("extendedMonitoring.events.severityLevel", "OnlyWarnings")
 			hec.ValuesSetFromYaml("extendedMonitoring.imageAvailability", `{}`)
-			hec.ValuesSetFromYaml("extendedMonitoring.events", `{}`)
+			hec.ValuesSetFromYaml("extendedMonitoring.certificates", `{}`)
 			hec.HelmRender()
 		})
 		It("Should add desired objects", func() {
 			Expect(hec.RenderError).ShouldNot(HaveOccurred())
-			checkCertExporterObjects(hec, true)
+			checkEventsObjects(hec, true)
 		})
 	})
-	Context("Without imageAvailability.exporterEnabled", func() {
+	Context("Without events.exporterEnabled", func() {
 		BeforeEach(func() {
-			hec.ValuesSet("extendedMonitoring.certificates.exporterEnabled", false)
+			hec.ValuesSet("extendedMonitoring.events.exporterEnabled", false)
+			hec.ValuesSet("extendedMonitoring.events.severityLevel", "OnlyWarnings")
 			hec.ValuesSetFromYaml("extendedMonitoring.imageAvailability", `{}`)
-			hec.ValuesSetFromYaml("extendedMonitoring.events", `{}`)
+			hec.ValuesSetFromYaml("extendedMonitoring.certificates", `{}`)
 			hec.HelmRender()
 		})
 		It("Should not deploy desired objects", func() {
 			Expect(hec.RenderError).ShouldNot(HaveOccurred())
-			checkCertExporterObjects(hec, false)
+			checkEventsObjects(hec, false)
 		})
 	})
 })

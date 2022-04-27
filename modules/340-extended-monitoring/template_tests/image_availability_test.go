@@ -6,10 +6,8 @@ Licensed under the Deckhouse Platform Enterprise Edition (EE) license. See https
 package template_tests
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-
 	. "github.com/deckhouse/deckhouse/testing/helm"
+	. "github.com/onsi/ginkgo"
 )
 
 func checkImageAvailabilityObjects(hec *Config, exist bool) {
