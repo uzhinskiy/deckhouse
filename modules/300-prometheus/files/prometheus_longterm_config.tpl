@@ -2,7 +2,8 @@ global:
   scrape_interval: 5m
   scrape_timeout: 3m
   evaluation_interval: 5m
-{{- if (hasKey .Values.prometheus.internal.alertmanagers "main") }}
+{{- if (hasKey .Values.prometheus.internal.alertmanagers "byService") }}
+  {{- if (hasKey .Values.prometheus.internal.alertmanagers.byService "main") }}
 alerting:
   alert_relabel_configs:
   - separator: ;
@@ -10,7 +11,7 @@ alerting:
     replacement: $1
     action: labeldrop
   alertmanagers:
-  {{- range .Values.prometheus.internal.alertmanagers.main }}
+    {{- range .Values.prometheus.internal.alertmanagers.byService.main }}
   - kubernetes_sd_configs:
     - role: endpoints
       namespaces:
@@ -25,18 +26,19 @@ alerting:
       regex: {{ .name }}
       replacement: $1
       action: keep
-    {{- if kindIs "string" .port }}
+      {{- if kindIs "string" .port }}
     - source_labels: [__meta_kubernetes_endpoint_port_name]
       separator: ;
       regex: {{ .port | quote }}
       replacement: $1
       action: keep
-    {{- else }}
+      {{- else }}
     - source_labels: [__meta_kubernetes_pod_container_port_number]
       separator: ;
       regex: {{ .port | quote }}
       replacement: $1
       action: keep
+      {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}

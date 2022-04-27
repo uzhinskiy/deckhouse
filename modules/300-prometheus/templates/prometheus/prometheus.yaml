@@ -159,15 +159,17 @@ spec:
   additionalAlertManagerConfigs:
     name: prometheus-main-additional-configs
     key: alert-managers.yaml
-{{- if (hasKey .Values.prometheus.internal.alertmanagers "main") }}
+{{- if (hasKey .Values.prometheus.internal.alertmanagers "byService") }}
+  {{- if (hasKey .Values.prometheus.internal.alertmanagers.byService "main") }}
   alerting:
     alertmanagers:
-  {{- range .Values.prometheus.internal.alertmanagers.main }}
+    {{- range .Values.prometheus.internal.alertmanagers.byService.main }}
     - namespace: {{ .namespace }}
       name: {{ .name }}
       port: {{ .port }}
       scheme: http
       pathPrefix: {{ .pathPrefix }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- if .Values.global.modules.publicDomainTemplate }}

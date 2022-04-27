@@ -115,42 +115,45 @@ func applyAlertmanagerCRDFilter(obj *unstructured.Unstructured) (go_hook.FilterR
 func crdAlertmanagerHandler(input *go_hook.HookInput) error {
 	snap := input.Snapshots["alertmanager_crds"]
 
-	result := make([]alertmanagerValue, 0, len(snap))
+	addressDeclaredAlertmanagers := make([]alertmanagerValue, 0, len(snap))
 
 	serviceDeclaredAlertmanagers := make(map[string][]alertmanagerServiceInfo)
+
+	internalDeclaredAlertmanagers := make([]map[string]interface{}, 0)
 
 	for _, s := range snap {
 		am := s.(Alertmanager)
 
-		address, _, _ := unstructured.NestedString(am.Spec, "external", "address")
-		if address != "" {
-			// parse static_sd_config with direct target
-			value, err := parseTargetCR(am)
-			if err != nil {
-				return err
+		// External AlertManagers by service or address
+		if _, ok, _ := unstructured.NestedMap(am.Spec, "external"); ok {
+			address, _, _ := unstructured.NestedString(am.Spec, "external", "address")
+			if address != "" {
+				// parse static_sd_config with direct target
+				value, err := parseTargetCR(am)
+				if err != nil {
+					return err
+				}
+				addressDeclaredAlertmanagers = append(addressDeclaredAlertmanagers, value)
+			} else {
+				// parse service
+				old, err := parseServiceCR(am, input.Snapshots["services"])
+				if err != nil {
+					return err
+				}
+				if _, ok := serviceDeclaredAlertmanagers["main"]; !ok {
+					serviceDeclaredAlertmanagers["main"] = make([]alertmanagerServiceInfo, 0)
+				}
+				serviceDeclaredAlertmanagers["main"] = append(serviceDeclaredAlertmanagers["main"], old)
 			}
-			result = append(result, value)
-		} else {
-			// parse service
-			old, err := parseServiceCR(am, input.Snapshots["services"])
-			if err != nil {
-				return err
-			}
-			if _, ok := serviceDeclaredAlertmanagers["main"]; !ok {
-				serviceDeclaredAlertmanagers["main"] = make([]alertmanagerServiceInfo, 0)
-			}
-			serviceDeclaredAlertmanagers["main"] = append(serviceDeclaredAlertmanagers["main"], old)
+		}
+		// Internal AlertManager
+		if value, ok, _ := unstructured.NestedMap(am.Spec, "internal"); ok {
+			internalDeclaredAlertmanagers = append(internalDeclaredAlertmanagers, value)
 		}
 	}
 
-	if len(result) > 0 {
-		input.Values.Set("prometheus.internal.alerting.alertmanagers", result)
-	} else {
-		input.Values.Remove("prometheus.internal.alerting.alertmanagers")
-	}
-
 	// service discovery through the deprecated labeled services
-	deprecatedServices := handleDeperecatedAlertmanagerServices(input)
+	deprecatedServices := handleDeprecatedAlertmanagerServices(input)
 	if len(deprecatedServices) > 0 {
 		// merge old - service discovery AlertManagers and new CR
 		for gr, values := range deprecatedServices {
@@ -165,12 +168,14 @@ func crdAlertmanagerHandler(input *go_hook.HookInput) error {
 		}
 	}
 
-	input.Values.Set("prometheus.internal.alertmanagers", serviceDeclaredAlertmanagers)
+	input.Values.Set("prometheus.internal.alertmanagers.byAddress", addressDeclaredAlertmanagers)
+	input.Values.Set("prometheus.internal.alertmanagers.byService", serviceDeclaredAlertmanagers)
+	input.Values.Set("prometheus.internal.alertmanagers.internal", internalDeclaredAlertmanagers)
 
 	return nil
 }
 
-func handleDeperecatedAlertmanagerServices(input *go_hook.HookInput) map[string][]alertmanagerServiceInfo {
+func handleDeprecatedAlertmanagerServices(input *go_hook.HookInput) map[string][]alertmanagerServiceInfo {
 	snaps := input.Snapshots["alertmanager_services"]
 	alertManagers := make(map[string][]alertmanagerServiceInfo)
 	for _, svc := range snaps {
