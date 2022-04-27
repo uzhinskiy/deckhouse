@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       app: operator
-      istio.io/rev: {{ $revision }}
+      revision: {{ $revision }}
   namespaceSelector:
     matchNames:
     - d8-{{ $.Chart.Name }}
