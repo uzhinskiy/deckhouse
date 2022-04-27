@@ -1,0 +1,19 @@
+{{- range $revision := .Values.istio.internal.operatorRevisionsToInstall }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: d8-{{ $.Chart.Name }}
+  name: operator-metrics-{{ $revision }}
+  {{- include "helm_lib_module_labels" (list $ (dict "app" "operator" "revision" $revision)) | nindent 2 }}
+spec:
+  ports:
+  - name: http-monitoring
+    port: 8383
+    protocol: TCP
+    targetPort: 8383
+  selector:
+    app: operator
+    istio.io/rev: {{ $revision }}
+  type: ClusterIP
+{{- end }}

@@ -1,0 +1,35 @@
+{{- if (.Values.global.enabledModules | has "operator-prometheus-crd") }}
+  {{- range $revision := .Values.istio.internal.operatorRevisionsToInstall }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: operator-{{ $revision }}
+  namespace: d8-{{ $.Chart.Name }}
+  {{- include "helm_lib_module_labels" (list $ (dict "app" "operator" "prometheus" "main")) | nindent 2 }}
+spec:
+  jobLabel: prometheus.deckhouse.io/target
+  selector:
+    matchLabels:
+      app: operator
+      istio.io/rev: {{ $revision }}
+  namespaceSelector:
+    matchNames:
+    - d8-{{ $.Chart.Name }}
+  endpoints:
+  - port: http-monitoring
+    relabelings:
+    - regex: endpoint
+      action: labeldrop
+    - targetLabel: tier
+      replacement: cluster
+    - action: replace
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_label_app
+      targetLabel: app
+    - sourceLabels: [__meta_kubernetes_endpoint_ready]
+      regex: "true"
+      action: keep
+  {{- end }}
+{{- end }}
