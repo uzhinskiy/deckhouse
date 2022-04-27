@@ -1,0 +1,30 @@
+{{- if (hasKey .Values.prometheus.internal.alertmanagers "internal") }}
+  {{- range .Values.prometheus.internal.alertmanagers.internal }}
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: {{ .name }}
+  labels:
+    alertmanagerConfig: {{ .name }}
+spec:
+    {{- if .inhibitRules }}
+  inhibitRules:
+    {{- .inhibitRules | toYaml | nindent 4 }}
+    {{- end }}
+    {{- if .route }}
+  route:
+    {{- .route | toYaml | nindent 4 }}
+    {{- end }}
+    {{- if .receivers }}
+  receivers:
+    {{- .receivers | toYaml | nindent 4 }}
+    {{- end }}
+  - name: 'wechat-example'
+    wechatConfigs:
+    - apiURL: 'http://wechatserver:8080/'
+      corpID: 'wechat-corpid'
+      apiSecret:
+        name: 'wechat-config'
+        key: 'apiSecret'
+  {{- end }}
+{{- end }}
