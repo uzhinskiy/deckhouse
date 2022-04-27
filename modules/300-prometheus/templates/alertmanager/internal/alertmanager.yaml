@@ -1,0 +1,14 @@
+{{- if (hasKey .Values.prometheus.internal.alertmanagers "internal") }}
+  {{- range .Values.prometheus.internal.alertmanagers.internal }}
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: {{ .name }}
+  namespace: d8-monitoring
+spec:
+  replicas: 3
+  alertmanagerConfigSelector:
+    matchLabels:
+      alertmanagerConfig: {{ .name }}
+  {{- end }}
+{{- end }}

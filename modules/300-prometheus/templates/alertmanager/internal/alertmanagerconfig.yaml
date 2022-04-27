@@ -4,6 +4,7 @@ apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
   name: {{ .name }}
+  namespace: d8-monitoring
   labels:
     alertmanagerConfig: {{ .name }}
 spec:
