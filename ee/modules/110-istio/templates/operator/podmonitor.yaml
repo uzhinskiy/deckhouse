@@ -8,7 +8,6 @@ metadata:
   namespace: d8-monitoring
   {{- include "helm_lib_module_labels" (list $ (dict "app" "operator" "prometheus" "main")) | nindent 2 }}
 spec:
-  jobLabel: app
   selector:
     matchLabels:
       app: operator
@@ -26,10 +25,12 @@ spec:
     #tlsConfig:
     #  insecureSkipVerify: true
     relabelings:
+    - targetLabel: job
+      replacement: istio-operator
     - regex: endpoint|namespace|pod|service
       action: labeldrop
-    - sourceLabels: [__meta_kubernetes_pod_node_name]
-      targetLabel: node
+    - sourceLabels: [__meta_kubernetes_pod_label_revision]
+      targetLabel: revision
     - targetLabel: tier
       replacement: cluster
     - sourceLabels: [__meta_kubernetes_pod_ready]
