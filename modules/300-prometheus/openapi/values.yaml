@@ -326,6 +326,23 @@ properties:
               scheme: http
               target: 1.2.3.4
               path: metrics
+          - internal:
+            - name: wechat
+              receivers:
+              - name: wechat-example
+                wechatConfigs:
+                - apiSecret:
+                    key: apiSecret
+                    name: wechat-config
+                  apiURL: http://wechatserver:8080/
+                  corpID: wechat-corpid
+              route:
+                groupBy:
+                - job
+                groupInterval: 5m
+                groupWait: 30s
+                receiver: wechat-example
+                repeatInterval: 12h
       customCertificateData:
         type: object
         default: {}
