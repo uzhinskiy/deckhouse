@@ -14,7 +14,7 @@ spec:
     kind: StatefulSet
     name: alertmanager-{{ .name }}
   updatePolicy:
-    updateMode: auto
+    updateMode: "Auto"
     {{- end }}
   {{- end }}
 {{- end }}
