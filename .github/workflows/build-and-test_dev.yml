@@ -16,7 +16,7 @@ env:
   # <template: werf_envs>
   # Don't forget to update .gitlab-ci-simple.yml if necessary
   WERF_CHANNEL: "ea"
-  WERF_ENV: "FE"
+  WERF_ENV: "EE"
   # We use stapel image from own registry due to docker hub pull amount limitation.
   # To re-push stapel image from docker hub use command:
   # `skopeo copy docker://flant/werf-stapel:0.6.1 docker://registry-write.deckhouse.io/flant/werf-stapel:0.6.1`
@@ -282,16 +282,6 @@ jobs:
 
   # </template: git_info_job>
 
-  enable_fe:
-    if: ${{ needs.pull_request_info.outputs.edition == 'FE' }}
-    name: Enable FE
-    needs:
-      - pull_request_info
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo Enable ${{ needs.pull_request_info.outputs.edition }}
-
   enable_ee:
     if: ${{ needs.pull_request_info.outputs.edition == 'EE' }}
     name: Enable EE
@@ -502,7 +492,7 @@ jobs:
           if [[ -n "${DEV_REGISTRY_PATH}" ]]; then export WERF_REPO="${DEV_REGISTRY_PATH}"; fi
           type werf && source $(werf ci-env github --verbose --as-file)
 
-          # CE/EE/FE -> ce/ee/fe
+          # CE/EE -> ce/ee
           REGISTRY_SUFFIX=$(echo ${WERF_ENV} | tr '[:upper:]' '[:lower:]')
 
           # Registry path to publish images for Git branches.
