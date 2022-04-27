@@ -5,8 +5,6 @@ import (
 	_ "github.com/flant/addon-operator/sdk"
 
 	_ "github.com/deckhouse/deckhouse/ee/fe/modules/340-monitoring-applications/hooks"
-	_ "github.com/deckhouse/deckhouse/ee/fe/modules/450-keepalived/hooks"
-	_ "github.com/deckhouse/deckhouse/ee/fe/modules/450-network-gateway/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/fe/modules/500-basic-auth/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/fe/modules/500-okmeter/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/fe/modules/500-openvpn/hooks"
@@ -15,6 +13,8 @@ import (
 	_ "github.com/deckhouse/deckhouse/ee/modules/030-cloud-provider-openstack/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/modules/030-cloud-provider-vsphere/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/modules/110-istio/hooks"
+	_ "github.com/deckhouse/deckhouse/ee/modules/450-keepalived/hooks"
+	_ "github.com/deckhouse/deckhouse/ee/modules/450-network-gateway/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/modules/600-flant-integration/hooks"
 	_ "github.com/deckhouse/deckhouse/ee/modules/600-flant-integration/hooks/madison"
 	_ "github.com/deckhouse/deckhouse/ee/modules/600-flant-integration/hooks/migrate"
