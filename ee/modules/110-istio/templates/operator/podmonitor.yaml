@@ -2,13 +2,13 @@
   {{- range $revision := .Values.istio.internal.operatorRevisionsToInstall }}
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
-  name: operator-{{ $revision }}
-  namespace: d8-{{ $.Chart.Name }}
+  name: istio-operator-{{ $revision }}
+  namespace: d8-monitoring
   {{- include "helm_lib_module_labels" (list $ (dict "app" "operator" "prometheus" "main")) | nindent 2 }}
 spec:
-  jobLabel: prometheus.deckhouse.io/target
+  jobLabel: app
   selector:
     matchLabels:
       app: operator
@@ -16,19 +16,23 @@ spec:
   namespaceSelector:
     matchNames:
     - d8-{{ $.Chart.Name }}
-  endpoints:
-  - port: http-monitoring
+  podMetricsEndpoints:
+  - port: http-metrics
+    scheme: http
+    #scheme: https # TODO https://github.com/deckhouse/deckhouse/issues/1487
+    #bearerTokenSecret:
+    #  name: "prometheus-token"
+    #  key: "token"
+    #tlsConfig:
+    #  insecureSkipVerify: true
     relabelings:
-    - regex: endpoint
+    - regex: endpoint|namespace|pod|service
       action: labeldrop
+    - sourceLabels: [__meta_kubernetes_pod_node_name]
+      targetLabel: node
     - targetLabel: tier
       replacement: cluster
-    - action: replace
-      replacement: $1
-      sourceLabels:
-      - __meta_kubernetes_pod_label_app
-      targetLabel: app
-    - sourceLabels: [__meta_kubernetes_endpoint_ready]
+    - sourceLabels: [__meta_kubernetes_pod_ready]
       regex: "true"
       action: keep
   {{- end }}
