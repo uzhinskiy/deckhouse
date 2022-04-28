@@ -1,0 +1,87 @@
+candi:
+  features:
+    - summary: Bump containerd to v1.5.11.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1386
+    - summary: Improve candi bundle detection to detect centos-based distros
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1173
+  fixes:
+    - summary: Migrate to cgroupfs on containerd installations.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1386
+ci:
+  fixes:
+    - summary: support push trigger, fix permissions in render script
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1486
+    - summary: Fix image name for running e2e tests in test repositories
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1414
+cloud-provider-azure:
+  features:
+    - summary: Enable accelerated networking for new machine-controller-manager instances.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1266
+cloud-provider-vsphere:
+  fixes:
+    - summary: setting default values in hybrid mode.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1363
+cloud-provider-yandex:
+  features:
+    - summary: >-
+        Changed default platform to standard-v3 for new instances created by
+        machine-controller-manager.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1361
+cni-flannel:
+  features:
+    - summary: Bump flannel to 0.15.1.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1173
+dhctl:
+  features:
+    - summary: Remove creating master node group
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1422
+  fixes:
+    - summary: Add InsecureSkipTLSVerifyBackend option for requesting deckhouse logs
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1412
+docs:
+  features:
+    - summary: Don't collapse the expanded item in the sidebar when expanding the item.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1470
+  fixes:
+    - summary: >-
+        Bump web-router to v1.0.11 to use links to the exact version instead of a group version in
+        the language menu.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1473
+    - summary: Change the diskType from the gp2 to gp3 in the Getting started for AWS.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1468
+    - summary: Fixed some misspellings.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1445
+extended-monitoring:
+  fixes:
+    - summary: Exporter won't get suck on scrapes and it won't generate a useless grouping alert
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1459
+log-shipper:
+  fixes:
+    - summary: Migrate deprecated elasticsearch fields
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1453
+    - summary: Send reloading signal to all vector processes in a container on config change.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1430
+node-manager:
+  features:
+    - summary: Add hook for creating master node group
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1422
+prometheus:
+  features:
+    - summary: Create table with enabled Deckhouse web interfaces on the Grafana home page
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1415
+  fixes:
+    - summary: >-
+        Removed the old prometheus_storage_class_change shell hook which has already been replaced
+        by Go hooks.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1396
+upmeter:
+  fixes:
+    - summary: Fix the application of disabled probes
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1450
+    - summary: UI shows only present data
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1405
+    - summary: Use finite timeout in agent insecure HTTP client
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1334
+    - summary: Fixed slow data loading in
+      pull_request: https://github.com/deckhouse/deckhouse/pull/1257
+
