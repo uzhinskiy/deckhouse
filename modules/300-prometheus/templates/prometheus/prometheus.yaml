@@ -173,7 +173,7 @@ spec:
     {{- range .Values.prometheus.internal.alertmanagers.internal }}
     - namespace: d8-monitoring
       name: {{ .name }}
-      port: web
+      port: https
     {{- end }}
   {{- end }}
 {{- end }}

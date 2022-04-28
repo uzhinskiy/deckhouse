@@ -4,7 +4,7 @@ apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
   name: {{ .name }}
-  namespace: d8-monitoring
+  namespace: default
   {{- include "helm_lib_module_labels" (list $ (dict "app" (printf "alertmanager-%s" .name) "alertmanagerConfig" .name )) | nindent 2 }}
 spec:
     {{- if .inhibitRules }}
