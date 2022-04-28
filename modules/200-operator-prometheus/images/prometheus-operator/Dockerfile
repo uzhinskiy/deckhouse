@@ -6,9 +6,8 @@ RUN apt update && apt install -qfy \
 RUN mkdir /coreos && cd /coreos \
   && git clone -b "v0.56.0" --single-branch https://github.com/prometheus-operator/prometheus-operator.git
 WORKDIR /coreos/prometheus-operator
-COPY patches/liveness-probe.patch patches/scrape-params.patch ./
-RUN patch -p1 < liveness-probe.patch && \
-    patch -p1 < scrape-params.patch && \
+COPY patches/scrape-params.patch ./
+RUN patch -p1 < scrape-params.patch && \
     make operator
 
 FROM $BASE_ALPINE
