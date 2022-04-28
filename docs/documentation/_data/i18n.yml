@@ -109,8 +109,8 @@ features:
     en: This feature is actively developed. It might significantly change in the future.
     ru: Находится в процессе активного развития. Функциональность может существенно измениться.
   proprietaryOkmeter:
-    en: To use this feature you need to buy an <a href="https://okmeter.io">Okmeter</a> license.
-    ru: Для использования этого функционала необходимо приобретение лицензии <a href="https://okmeter.io">Okmeter</a>.
+    en: This feature requires an <a href="https://okmeter.io">Okmeter</a> license.
+    ru: Для этого компонента требуется лицензия <a href="https://okmeter.io">Okmeter</a>.
   ee:
     en: This feature is available in Enterprise Edition only.
     ru: Доступно только в Enterprise Edition.
