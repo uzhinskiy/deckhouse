@@ -8,12 +8,8 @@ metadata:
   namespace: d8-monitoring
   {{- include "helm_lib_module_labels" (list $ (dict "app" (printf "alertmanager-%s" .name))) | nindent 2 }}
 spec:
-  alertmanagerConfigNamespaceSelector:
-    matchLabels:
-      kubernetes.io/metadata.name: default
-  alertmanagerConfigSelector:
-    matchLabels:
-      alertmanagerConfig: {{ .name }}
+  alertManagerConfiguration:
+    name: {{ .name }}
   replicas: {{ include "helm_lib_is_ha_to_value" (list $ 2 1) }}
   image: "{{ $.Values.global.modulesImages.registry }}:{{ $.Values.global.modulesImages.tags.prometheus.alertmanager }}"
   imagePullSecrets:
