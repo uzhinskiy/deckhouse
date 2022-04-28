@@ -54,10 +54,14 @@
 ## Fixes
 
 
+ - **[candi]** fixed race condition between old kubernetes-api-proxy-configurator and bashible step [#1482](https://github.com/deckhouse/deckhouse/pull/1482)
  - **[candi]** Fix startup config in Kubernetes API proxy configuration script. [#1426](https://github.com/deckhouse/deckhouse/pull/1426)
  - **[candi]** Added imagePullPolicy: IfNotPresent to kubernetes-api-proxy static pod. Fixed kubernetes-api-proxy run in docker envs. [#1297](https://github.com/deckhouse/deckhouse/pull/1297)
+ - **[ceph-csi]** Allow helm_lib_csi_node_manifests to be used for all cluster types for ceph-csi. [#1478](https://github.com/deckhouse/deckhouse/pull/1478)
  - **[chrony]** Remove chronyd stale pid file on start [#1375](https://github.com/deckhouse/deckhouse/pull/1375)
+ - **[cloud-provider-aws]** Fix OpenAPI specifications [#1449](https://github.com/deckhouse/deckhouse/pull/1449)
  - **[cloud-provider-aws]** The necessary IAM policies for creating a peering connection have been added to the documentation. [#504](https://github.com/deckhouse/deckhouse/pull/504)
+ - **[cloud-provider-vsphere]** Fix OpenAPI specifications [#1449](https://github.com/deckhouse/deckhouse/pull/1449)
  - **[cloud-provider-vsphere]** Correct behavior of nestedHardwareVirtualization parameter for VsphereInstanceClass. [#1331](https://github.com/deckhouse/deckhouse/pull/1331)
     Node groups with VsphereInstanceClass runtimeOptions.nestedHardwareVirtualization set to false have to be manually updated for this setting to take place. New nodes will be created with disabled nested hardware virtualization if it is disabled in configuration.
  - **[control-plane-manager]** Add the `--experimental-initial-corrupt-check` flag for etcd. [#1267](https://github.com/deckhouse/deckhouse/pull/1267)
