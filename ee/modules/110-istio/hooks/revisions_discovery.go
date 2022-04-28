@@ -44,7 +44,7 @@ func applyIstioOperatorFilter(obj *unstructured.Unstructured) (go_hook.FilterRes
 
 type NamespaceInfo struct {
 	Name     string
-	Revision string
+	Revision string // for revisions_monitoring.go
 }
 
 func applyNamespaceFilter(obj *unstructured.Unstructured) (go_hook.FilterResult, error) {
@@ -54,9 +54,17 @@ func applyNamespaceFilter(obj *unstructured.Unstructured) (go_hook.FilterResult,
 		return "", err
 	}
 
-	return NamespaceInfo{
+	var namespaceInfo = NamespaceInfo{
 		Name: namespace.GetName(),
-	}, nil
+	}
+
+	if revision, ok := namespace.Labels["istio.io/rev"]; ok {
+		namespaceInfo.Revision = revision
+	} else {
+		namespaceInfo.Revision = "global"
+	}
+
+	return namespaceInfo, nil
 }
 
 type GlobalServiceInfo struct {
@@ -167,13 +175,7 @@ func revisionsDiscovery(input *go_hook.HookInput, dc dependency.Container) error
 		revisionsToInstall = append(revisionsToInstall, globalRevision)
 	}
 
-	for _, ns := range input.Snapshots["namespaces_definite_revision"] {
-		nsInfo := ns.(NamespaceInfo)
-		if !internal.Contains(applicationNamespaces, nsInfo.Name) {
-			applicationNamespaces = append(applicationNamespaces, nsInfo.Name)
-		}
-	}
-	for _, ns := range input.Snapshots["namespaces_global_revision"] {
+	for _, ns := range append(input.Snapshots["namespaces_definite_revision"], input.Snapshots["namespaces_global_revision"]...) {
 		nsInfo := ns.(NamespaceInfo)
 		if !internal.Contains(applicationNamespaces, nsInfo.Name) {
 			applicationNamespaces = append(applicationNamespaces, nsInfo.Name)

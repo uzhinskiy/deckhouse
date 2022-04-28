@@ -113,7 +113,7 @@ globalVersion: "1.4"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 			f.ConfigValuesSet("istio.globalVersion", "1.1.0")
-			f.ConfigValuesSetFromYaml("istio.additionalVersions", []byte(`["1.4","1.3"]`))
+			f.ConfigValuesSet("istio.additionalVersions", []string{"1.4", "1.3"})
 			f.BindingContexts.Set(f.KubeStateSet(`
 ---
 # regular ns
@@ -224,7 +224,7 @@ globalVersion: "1.3.1"
 `
 			f.ValuesSetFromYaml("istio", []byte(values))
 			f.ConfigValuesSet("istio.globalVersion", "1.2.3-beta.45")
-			f.ConfigValuesSetFromYaml("istio.additionalVersions", []byte(`["1.7.4", "1.1.0", "1.8.0-alpha.2", "1.3.1", "1.9.0"]`))
+			f.ConfigValuesSet("istio.additionalVersions", []string{"1.7.4", "1.1.0", "1.8.0-alpha.2", "1.3.1", "1.9.0"})
 			f.RunHook()
 		})
 		It("Should return errors", func() {
