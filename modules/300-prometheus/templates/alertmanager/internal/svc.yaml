@@ -1,17 +1,23 @@
 {{- if (hasKey .Values.prometheus.internal.alertmanagers "internal") }}
   {{- range .Values.prometheus.internal.alertmanagers.internal }}
 ---
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
+apiVersion: v1
+kind: Service
 metadata:
-  name: alertmanager-{{ .name }}
+  name: {{ .name }}
   namespace: d8-monitoring
   {{- include "helm_lib_module_labels" (list $ (dict "app" (printf "alertmanager-%s" .name))) | nindent 2 }}
 spec:
-  minAvailable: {{ include "helm_lib_is_ha_to_value" (list $ 1 0) }}
+  clusterIP: None
+  ports:
+  - name: https
+    port: 9093
+    protocol: TCP
+    targetPort: https
   selector:
-    matchLabels:
-      app: alertmanager
-      alertmanager: {{ .name }}
+    app: alertmanager
+    alertmanager: {{ .name }}
+  sessionAffinity: None
+  type: ClusterIP
   {{- end }}
 {{- end }}
